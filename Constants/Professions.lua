@@ -32,7 +32,7 @@ ProfessionIds = {
     { Id = 65, NameFr = "Bricoleur", NameEn = "Handyman" },
     { Id = 74, NameFr = "Façomage", NameEn = "Craftmagus" },
     { Id = 75, NameFr = "Parchomage", NameEn = "Scrollmage" },
-    { Id = 78, NameFr = "", NameEn = "Beastologist" },
+    { Id = 78, NameFr = "", NameEn = "Beastologist" }
  }
 
  function GetProfessionNameById(professionId, localization)
