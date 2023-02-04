@@ -1,6 +1,8 @@
-ProfessionIds = {
-    { Id = 1,  NameFr = "Base", NameEn = "Base" },
-    { Id = 2,  NameFr = "Bűcheron", NameEn = "Lumberjack"},
+local professions =  {}
+
+professions.ProfessionIds = {
+    { Id = 1, NameFr = "Base", NameEn = "Base" },
+    { Id = 2, NameFr = "Bűcheron", NameEn = "Lumberjack"},
     { Id = 11, NameFr = "Forgeron", NameEn = "Smith" },
     { Id = 13, NameFr = "Sculpteur", NameEn = "Carver" },
     { Id = 14, NameFr = "Forgeur de Marteaux", NameEn = "Hammer Smith" },
@@ -35,28 +37,24 @@ ProfessionIds = {
     { Id = 78, NameFr = "", NameEn = "Beastologist" }
  }
 
- function GetProfessionNameById(professionId, localization)
-    for key, value in pairs(ProfessionIds) do
-        if (value.Id == professionId) then
-            if (localization == "Fr") then
+ function professions.GetProfessionNameById(professionId, localization)
+    for _, value in pairs(professions.ProfessionIds) do
+        if (value.Id == professionId and localization == "Fr") then
                 return value.NameFr
-            elseif (localization == "En")  then
+        elseif (value.Id == professionId and localization == "En")  then
                 return value.NameEn
-            end
+        end
+    end
+end 
+
+ function professions.GetProfessionIdByName(professionName, localization)
+    for _, value in pairs(professions.ProfessionIds) do
+        if (localization == "Fr" and value.NameFr == professionName) then
+                return value.Id
+        elseif (localization == "En" and value.NameEn == professionName) then
+                return value.Id
         end
     end
  end
 
- function GetProfessionIdByName(professionName, localization)
-    for key, value in pairs(ProfessionIds) do
-        if (localization == "Fr") then
-            if (value.NameFr == professionName) then
-                return value.Id
-            end
-        elseif (localization == "En") then
-            if (value.NameEn == professionName) then
-                return value.Id
-            end
-        end
-    end
- end
+ return professions
