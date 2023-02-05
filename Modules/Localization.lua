@@ -1,6 +1,6 @@
-local localizations = {}
+local localization = {}
 
-localizations.LocalizationsData = {
+localization.Data = {
     { Culture = "enUS", Language = "en", LangConfigFileName = "config-lang-en.xml" },
     { Culture = "frFR", Language = "fr", LangConfigFileName = "config-lang-fr.xml" },
     { Culture = "deDE", Language = "de", LangConfigFileName = "config-lang-de.xml" },
@@ -9,4 +9,4 @@ localizations.LocalizationsData = {
     { Culture = "ptBR", Language = "pt", LangConfigFileName = "config-lang-pt.xml" },
 }
 
-return localizations
+return localization

@@ -1,45 +1,39 @@
 ----------------------
 -- Generic settings --
 ----------------------
--- FOLLOW_NORMAL = true 
 
 -- Items to automatically delete when out of combat
-AUTO_DELETE = {
-
-}
-
+-- Type: global table of of integers (itemIds)
+AUTO_DELETE = {}
 -- Ressources to gather if availible at map
-GATHER = {
-
-}
-
+-- Type: global table of of integers (ressourceIds)
+GATHER = {}
 -- Minimum number of monsters in mob group to attack it
+-- Type: global integer variable
 MIN_MONSTERS = 1
-
 -- Maximum number of monsters in mob group to attack it
-MAX_MONSTERS = 4
-
+-- Type: global integer variable
+MAX_MONSTERS = 8
 -- Required monsters in mob group to attack it
-FORCE_MONSTERS = {
-
-}
-
+-- Type: global table of integers (mobIds)
+FORCE_MONSTERS = {}
 -- Forbidden monsters in mob group to never attack it
-FORBIDDEN_MONSTERS = {
-
-}
+-- Type: global table of integers (mobIds)
+FORBIDDEN_MONSTERS = {}
 
 --------------------
 -- Main Functions --
 --------------------
 
--- This executes only when below banking % of pods
+-- This executes only when below banking % of pods or when banking disabled
 function move()
     return {
-        -- map defined by X, Y pos, path to change to next map by top edge of map box
+        -- map defined by mapX, mapY pos, path to change to next map by top edge of map box
         { map = "4,-19", path = "top" },
-        -- map defined by X, Y pos, path to change map specifies map box edge and also concrete cellId to use
+        -- map defined by mapX, mapY pos, path to change map specifies map box edge and also concrete cellId to use
         { map = "0,0", path = "left(364)" },
+        -- map defined by mapId, path defined by combination of possible paths results in a randomized selection of one result
+        { map = "9856523", path = "top|left|right"},
     }
 end
 
@@ -65,8 +59,8 @@ end
 -- This executes if script abnormaly terminates (crash, disconnect etc...)
 function stopped()
     global:printError("Warning script terminated!")
-    -- Reload script
+    -- Reloads script and executes it
     -- global:reloadScript()
-    -- Disconnect
+    -- Disconnects client from server
     -- global:disconnect()
 end

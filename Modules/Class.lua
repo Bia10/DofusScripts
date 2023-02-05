@@ -1,4 +1,6 @@
-ClassIds = {
+local class = {}
+
+class.Data = {
     { Id = 1, NameFr = "Féca", NameEn = "Feca" },
     { Id = 2, NameFr = "Osamodas", NameEn = "Osamodas"},
     { Id = 3, NameFr = "Enutrof", NameEn = "Enutrof"},
@@ -19,3 +21,5 @@ ClassIds = {
     { Id = 18, NameFr = "Ouginak", NameEn = "Ouginak" },
     { Id = 20, NameFr = "", NameEn = "Forgelance" }
  }
+
+ return class

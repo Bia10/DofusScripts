@@ -1,6 +1,6 @@
-local professions =  {}
+local profession =  {}
 
-professions.ProfessionIds = {
+profession.Data = {
     { Id = 1, NameFr = "Base", NameEn = "Base" },
     { Id = 2, NameFr = "Bűcheron", NameEn = "Lumberjack"},
     { Id = 11, NameFr = "Forgeron", NameEn = "Smith" },
@@ -37,8 +37,8 @@ professions.ProfessionIds = {
     { Id = 78, NameFr = "", NameEn = "Beastologist" }
  }
 
- function professions.GetProfessionNameById(professionId, localization)
-    for _, value in pairs(professions.ProfessionIds) do
+ function profession.GetNameById(professionId, localization)
+    for _, value in pairs(profession.Data) do
         if (value.Id == professionId and localization == "Fr") then
                 return value.NameFr
         elseif (value.Id == professionId and localization == "En")  then
@@ -47,8 +47,8 @@ professions.ProfessionIds = {
     end
 end 
 
- function professions.GetProfessionIdByName(professionName, localization)
-    for _, value in pairs(professions.ProfessionIds) do
+ function profession.GetIdByName(professionName, localization)
+    for _, value in pairs(profession.Data) do
         if (localization == "Fr" and value.NameFr == professionName) then
                 return value.Id
         elseif (localization == "En" and value.NameEn == professionName) then
@@ -57,4 +57,4 @@ end
     end
  end
 
- return professions
+ return profession
