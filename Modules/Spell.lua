@@ -112,7 +112,7 @@ function spell.IsCastableAtTargetCell(spellId, numberOfTimes, targetCellId)
         return false
     end
 
-    if spell.IsTargetInLineOfSight(spellId, myCellId, targetCellId) then
+    if spell.IsTargetInLineOfSight(spellId, myCellId, targetCellId) == false then
         return false
     end
 
