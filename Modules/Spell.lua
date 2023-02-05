@@ -76,7 +76,7 @@ function spell.HasApToCast(spellId, numberOfTimes)
     end
 end
 
-function spell.IsTargetInRange(spellId, myCellId, targetCellId)
+function spell.IsTargetCellInRange(spellId, myCellId, targetCellId)
     local distanceToTargetCell = fightAction:getDistance(myCellId, targetCellId)
     local spellDefaultRange = spell.GetSpellParam(spellId, "DefaultRange")
     local characterRangeBonus = fightCharacter:getRange()
@@ -89,9 +89,18 @@ function spell.IsTargetInRange(spellId, myCellId, targetCellId)
     end
 end
 
-function spell.IsTargetInLineOfSight(spellId, myCellId, targetCellId)
-    local spellRequiresLineOfSight = spell.GetSpellParam(spellId, "LosRequired")
-    return spellRequiresLineOfSight == true and fightAction:inLineOfSight(myCellId, targetCellId) == true
+function spell.IsTargetCellInLineOfSight(spellId, myCellId, targetCellId)
+    local isLineOfSightRequired = spell.GetSpellParam(spellId, "LosRequired")
+
+    if isLineOfSightRequired == false then
+        return true
+    end
+
+    if isLineOfSightRequired == true and fightAction:inLineOfSight(myCellId, targetCellId) == true then
+        return true
+    end
+
+    return false
 end
 
 function spell.IsCastable(spellId, numberOfTimes)
@@ -108,11 +117,11 @@ function spell.IsCastableAtTargetCell(spellId, numberOfTimes, targetCellId)
         return false
     end
 
-    if spell.IsTargetInRange(spellId, myCellId, targetCellId) == false then
+    if spell.IsTargetCellInRange(spellId, myCellId, targetCellId) == false then
         return false
     end
 
-    if spell.IsTargetInLineOfSight(spellId, myCellId, targetCellId) == false then
+    if spell.IsTargetCellInLineOfSight(spellId, myCellId, targetCellId) == false then
         return false
     end
 
@@ -131,7 +140,7 @@ function spell.TryMoveIntoCastRange(spellId, targetCellId)
     end
 end
 
-function spell.TryCastingAtCellId(spellId, myCellId, targetCellId)
+function spell.TryCastingAtTargetCell(spellId, myCellId, targetCellId)
     -- Verification if we can cast spell on given cellId, result is a enum defined in spell.CastOnCellState
     local spellCastOnCellState = fightAction:canCastSpellOnCell(myCellId, spellId, targetCellId)
     -- Convert reason int value to string

@@ -18,7 +18,7 @@ function basicWaterStrategy.CastThrowingCoinsAtNearestEnemy()
 
             -- Check range and try casting
             if spell.IsCastableAtTargetCell(spellId, nearestEnemyCellId) then
-                spell.TryCastingAtCellId(spellId, myCellId, nearestEnemyCellId)
+                spell.TryCastingAtTargetCell(spellId, myCellId, nearestEnemyCellId)
             end
 
             -- If i have mp left move towards target
@@ -27,7 +27,7 @@ function basicWaterStrategy.CastThrowingCoinsAtNearestEnemy()
 
                 -- Again check range and try casting
                 if spell.IsCastableAtTargetCell(spellId, nearestEnemyCellId) then
-                    spell.TryCastingAtCellId(spellId, myCellId, nearestEnemyCellId)
+                    spell.TryCastingAtTargetCell(spellId, myCellId, nearestEnemyCellId)
                 end
             end
         end
@@ -44,7 +44,7 @@ function basicWaterStrategy.SummonLivingBag()
         -- Check cells around my cell if its empty summon living bag
         for i = 1, #adjecentCellIds, 1 do
             if fightAction:isFreeCell(adjecentCellIds[i]) then
-                spell.TryCastingAtCellId(spellId, myCellId, adjecentCellIds[i])
+                spell.TryCastingAtTargetCell(spellId, myCellId, adjecentCellIds[i])
             end
         end
     end
