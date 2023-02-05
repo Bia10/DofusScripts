@@ -1,4 +1,5 @@
 local fightEngine = require("Modules.FightEngine")
+local worldMove = require("Modules.WorldMove")
 
 local routeProcessor = {}
 
@@ -25,10 +26,10 @@ function routeProcessor.takeRandomBreak()
 end
 
 -- Example of execution
--- routeProcessor:Run(routeProcessor.RouteData, true, false)
+-- routeProcessor:Run(routeProcessor.RouteData, false, true, false)
 
 -- Runs a custom route data processor wich ultimately outputs only basic move data to move() of main script
-function routeProcessor:Run(routeDataTable, fightOnMaps, gatherOnMaps)
+function routeProcessor:Run(routeDataTable, traverseMaps, fightOnMaps, gatherOnMaps)
     local currentMapPos = map.currentPos()
     local currentMapId = tostring(map.currentMapId())
     local routeDataTableRow = nil
@@ -66,6 +67,7 @@ function routeProcessor:Run(routeDataTable, fightOnMaps, gatherOnMaps)
 
             -- select new replacementNode at position of my routeNode
             local currentRouteNode = self.RouteNodes[currentMapId]
+            local curMapNode = routeDataTableRow.mapNode[currentRouteNode]
             local newReplacementNode = routeDataTableRow.replacementNode[currentRouteNode]
 
             -- if its a function type, change node type at routeNode position
@@ -74,6 +76,9 @@ function routeProcessor:Run(routeDataTable, fightOnMaps, gatherOnMaps)
                 routeDataTableRow.customFunctionNode = newReplacementNode
             else
                 routeDataTableRow.replacementNode = newReplacementNode
+                if traverseMaps == true then
+                    worldMove.ToMap(tonumber(curMapNode))
+                end
             end
         end
     end
@@ -98,7 +103,7 @@ function routeProcessor:Run(routeDataTable, fightOnMaps, gatherOnMaps)
         end
     end
 
-    -- FightNodes processing which are boolean type
+    -- GatherNodes processing which are boolean type
     if routeDataTableRow.gatherNode then
         if type(routeDataTableRow.gatherNode) == "boolean" and routeDataTableRow.gatherNode == true then
             if gatherOnMaps == true then
