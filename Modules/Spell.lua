@@ -4,7 +4,7 @@ local spell = {}
 
 spell.Data = {
     { Id = 0,  NameFr = "Coup de poing", NameEn = "Punch" },
-    { Id = 13338,  NameFr = "Lancer de Pièces", NameEn = "Coin Throwing" },
+    { Id = 13338,  NameFr = "Lancer de Pièces", NameEn = "Coin Throwing", ApCost = 2 },
  }
 
  spell.CastOnCellState = {
@@ -30,6 +30,18 @@ end
 function spell.CanCastThisTurn(turnNumber)
         -- Assuming that first turn its always castable, may not be
       return fightAction:getCurrentTurn() == 1 or fightAction:getCurrentTurn() % turnNumber == 0
+end
+
+function spell.HasApToCast(spellId, numberOfTimes)
+  for _, value in pairs(spell.Data) do
+     if (value.Id == spellId) then
+        if (numberOfTimes == 1) then
+           return fightCharacter:getAP() >= value.ApCost
+        elseif (numberOfTimes > 1) then
+           return (fightCharacter:getAP() * numberOfTimes) >= (value.ApCost * numberOfTimes)
+        end
+      end
+   end
 end
 
 return spell

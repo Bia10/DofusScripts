@@ -47,34 +47,36 @@ function fightManagement()
 end
 
 function BasicWaterEnuStrategy()
-    CastThrowingCoinsAtNearestEnemy()
+    CastThrowingCoinsAtNearestEnemy(3)
 end
 
-function CastThrowingCoinsAtNearestEnemy()
-               -- Assuming default cast options, cast coin throwing at nearest enemy cellId 3 times
-               for i = 1, 3 do
-                -- Get my cellId
-                local myCellId = fightCharacter:getCellId();
-                -- Get cellId of nearestEnemy
-                local nearestEnemycellId = fightAction:getNearestEnemy()
-                -- Get spellId of Coin Throwing
-                local spellId = spell.GetIdByName("Coin Throwing", "En")  
-                -- Verification if we can cast spell on given cellId, result is a enum defined in spell.CastOnCellState
-                local spellCastOnCellState = fightAction:canCastSpellOnCell(myCellId, spellId, nearestEnemycellId)
-                -- Convert reason int value to string
-                local spellCastOnCellStateStr = spell.CastOnCellStateToString(spellCastOnCellState)
-           
-                -- Its not possble to cast given spellId at given cellId for a reason
-                if (spellCastOnCellState ~= spell.CastOnCellState.CASTING_POSSIBLE) then
-                    global:printError("Its not possible to cast: " ..spellId.. " on cellId: " ..myCellId.. " reason: " ..spellCastOnCellStateStr)
-                    ---------------------------------------------
-                    -- Spell cast on cellId failure processing --
-                    ---------------------------------------------
-                    -- TODO: collect data, what is the reason of failure?
-                    -- TODO: is possible to fix the reason of failure?
-                end
+function CastThrowingCoinsAtNearestEnemy(numberOfTimes)
+    -- Get spellId of Coin Throwing
+    local spellId = spell.GetIdByName("Coin Throwing", "En")
+    
+    if (spell.HasApToCast(spellId, numberOfTimes)) then
+        for i = 1, numberOfTimes do
+            -- Get my cellId
+            local myCellId = fightCharacter:getCellId();
+            -- Get cellId of nearestEnemy
+            local nearestEnemycellId = fightAction:getNearestEnemy()
+            -- Verification if we can cast spell on given cellId, result is a enum defined in spell.CastOnCellState
+            local spellCastOnCellState = fightAction:canCastSpellOnCell(myCellId, spellId, nearestEnemycellId)
+            -- Convert reason int value to string
+            local spellCastOnCellStateStr = spell.CastOnCellStateToString(spellCastOnCellState)
 
-                -- Casting possible then cast spell on cellId
-                fightAction:castSpellOnCell(spellId, nearestEnemycellId)
+            -- Its not possble to cast given spellId at given cellId for a reason
+            if (spellCastOnCellState ~= spell.CastOnCellState.CASTING_POSSIBLE) then
+                global:printError("Its not possible to cast: " ..spellId.. " on cellId: " ..myCellId.. " reason: " ..spellCastOnCellStateStr)
+                ---------------------------------------------
+                -- Spell cast on cellId failure processing --
+                ---------------------------------------------
+                -- TODO: collect data, what is the reason of failure?
+                -- TODO: is possible to fix the reason of failure?
+            end
+
+            -- Casting possible then cast spell on cellId
+            fightAction:castSpellOnCell(spellId, nearestEnemycellId)
         end
+    end
 end

@@ -1,3 +1,5 @@
+local fightEngine = require("Modules.FightEngine")
+
 local routeProcessor = {}
 
 routeProcessor.Nodes = {}
@@ -38,7 +40,7 @@ function routeProcessor:Run(routeDataTable)
         end
     end
 
-    -- There is no defined mapAction for given mapId or mapPos
+    -- There are no data for given mapId or mapPos
     if not routeDataTableRow then
         global.printMessage("[RouteProcessor] None route data found on mapPos: " ..currentMapPos.. " (" ..currentMapId.. ").")
         return self.noneRouteDataTableRow()
@@ -72,14 +74,14 @@ function routeProcessor:Run(routeDataTable)
     if (routeDataTableRow.fightNode) then
         if (type(routeDataTableRow.fightNode) == "boolean" and routeDataTableRow.fightNode == true) then
             -- TODO: custom logic
+            fightEngine.setForbiddenMonsters(fightEngine.suggestForbiddenMonsters)
+            fightEngine.setRequiredMonsters(fightEngine.suggestRequiredMonsters)
+            -- fight will take into consideration the global script paramters!
             map:fight()
         end
     end
 
-    -- Now we done what we wanted time to return basic data back to move() function
     local normalMoveData
-    normalMoveData.map = routeDataTableRow.mapNode
-    normalMoveData.path = routeDataTableRow.replacementNode
 
     -- FightNodes processing which are boolean type
     if (routeDataTableRow.gatherNode) then
@@ -89,8 +91,12 @@ function routeProcessor:Run(routeDataTable)
         end
     end
 
-	global.printMessage("[RouteProcessor] Generating move() data, map: " ..normalMoveData.map.. " path: " ..normalMoveData.path)
+    normalMoveData.map = routeDataTableRow.mapNode
+    normalMoveData.path = routeDataTableRow.replacementNode
 
+	global.printMessage("[RouteProcessor] Generating move() data, map: " ..normalMoveData.map.. " path: " ..normalMoveData.path.. " gather: " ..normalMoveData.gather)
+
+    -- Now we done what we wanted time to return basic data back to move() function
     return { normalMoveData }
 end
 
@@ -100,10 +106,7 @@ end
 
 function routeProcessor.noneRouteDataTableRow()
 	global.printMessage("[RouteProcessor] Nothing to do, nowhere to move ... going into heavenbag.")
-
-    return {
-        { map = map.currentMapId(), havenbag = true },
-    }
+    return { { map = map.currentMapId(), havenbag = true }, }
 end
 
 return routeProcessor

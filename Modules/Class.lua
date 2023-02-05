@@ -19,7 +19,7 @@ class.Data = {
     { Id = 16, NameFr = "Eliotrope", NameEn = "Eliotrope" },
     { Id = 17, NameFr = "Huppermage", NameEn = "Huppermage" },
     { Id = 18, NameFr = "Ouginak", NameEn = "Ouginak" },
-    { Id = 20, NameFr = "", NameEn = "Forgelance" }
+    { Id = 20, NameFr = "Forgelance", NameEn = "Forgelance" }
  }
 
  return class
