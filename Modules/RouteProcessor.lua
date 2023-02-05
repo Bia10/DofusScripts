@@ -93,8 +93,8 @@ function routeProcessor:Run(routeDataTable, traverseMaps, fightOnMaps, gatherOnM
         if type(routeDataTableRow.fightNode) == "boolean" and routeDataTableRow.fightNode == true then
             if fightOnMaps == true then
                 -- TODO: custom logic
-                fightEngine.setForbiddenMonsters(fightEngine.suggestForbiddenMonsters)
-                fightEngine.setRequiredMonsters(fightEngine.suggestRequiredMonsters)
+                fightEngine.setForbiddenMonsters(fightEngine.suggestForbiddenMonsters())
+                fightEngine.setRequiredMonsters(fightEngine.suggestRequiredMonsters())
                 -- Fight will take into consideration the global script params!
                 map:fight()
             elseif fightOnMaps == false then

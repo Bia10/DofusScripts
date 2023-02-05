@@ -1,4 +1,4 @@
-local enutrofBasicWaterStrategy = require("Strategies.Enutrof.BasicWaterStrategy")
+local characterClass = require("Modules.CharacterClass")
 
 function move()
     return {}
@@ -65,7 +65,7 @@ function fightManagement()
         --------------------
         -- Basic strategy --
         --------------------
-        enutrofBasicWaterStrategy.Execute()
+        characterClass.SelectAndExecuteFightStrategy(true)
 
         --------------------------------------------
         -- After doing actions check positioning --

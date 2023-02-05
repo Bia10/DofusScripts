@@ -10,7 +10,8 @@
         "phenix",
         "stopped",
         "fightManagement",
-        "prefightManagement"
+        "prefightManagement",
+        "character"
     ],
 
     "Lua.format.defaultConfig": {
