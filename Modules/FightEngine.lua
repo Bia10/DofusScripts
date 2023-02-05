@@ -3,7 +3,7 @@ local fightEngine = {}
 function fightEngine.setpecificMonsterGroups(monsterIds, mins, maxs)
     local specificMobGroups = {}
 
-    for i = 0, #monsterIds, 1 do
+    for i = 1, #monsterIds, 1 do
         specificMobGroups[i] = { monsterIds[i], mins[i], maxs[i] }
     end
 

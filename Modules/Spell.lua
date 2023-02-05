@@ -12,6 +12,20 @@ spell.CastOnCellState = {
     CASTING_POSSIBLE = 0,
     LIMIT_OF_CASTS_PER_TURN_REACHED = 1,
     SPELL_ON_COOLDOWN = 2,
+    INSUFICIENT_ACTION_POINTS = 3,
+    LIMIT_OF_CAST_PER_TARGET_REACHED = 4,
+    TARGET_TOO_FAR = 5,
+    TARGET_TOO_CLOSE = 6,
+    MUST_BE_CAST_IN_LINE = 7,
+    TARGET_OUTSIDE_LINE_OF_SIGHT = 8,
+    LIMIT_OF_SUMMONS_REACHED = 9,
+    TARGET_CELL_IS_OCCUPIED = 10,
+    TARGET_CELL_IS_EMPTY = 11,
+    STATE_EFFECT_REQUIRED = 12,
+    STATE_EFFECT_FORBIDDEN = 13,
+    MUST_BE_CAST_IN_DIAGONAL = 14,
+    UNKNOWN = 15,
+    OUT_OF_RANGE = 16
 }
 
 function spell.GetIdByName(spellName, localization)
@@ -71,6 +85,27 @@ function spell.IsTargetInRange(spellId, targetCellId)
     end
 end
 
+function spell.IsCastable(spellId, numberOfTimes)
+    if spell.HasApToCast(spellId, numberOfTimes) and spell.CanCastThisTurn(spellId) then
+        return true
+    end
+    -- TODO: range check if requred
+    -- TODO: target check
+    return false
+end
+
+function spell.TryMoveIntoCastRange(spellId, targetCellId)
+    local reachableCellsIds = fightAction:getReachableCells()
+    local spellDefaultRange = spell.GetSpellParam(spellId, "DefaultRange")
+    local characterRangeBonus = fightCharacter:getRange()
+
+    for _, value in pairs(reachableCellsIds) do
+        if fightAction:getDistance(value, targetCellId) < (spellDefaultRange + characterRangeBonus) then
+            fightAction:moveToWardCell(value)
+        end
+    end
+end
+
 function spell.TryCastingAtCellId(spellId, myCellId, targetCellId)
     -- Verification if we can cast spell on given cellId, result is a enum defined in spell.CastOnCellState
     local spellCastOnCellState = fightAction:canCastSpellOnCell(myCellId, spellId, targetCellId)
@@ -79,7 +114,7 @@ function spell.TryCastingAtCellId(spellId, myCellId, targetCellId)
 
     -- Its not possble to cast given spellId at given cellId for a reason
     if spellCastOnCellState ~= spell.CastOnCellState.CASTING_POSSIBLE then
-        global:printError("Its not possible to cast: " ..
+        global:printError("Its not possible to cast spellId: " ..
             spellId .. " on cellId: " .. targetCellId .. " reason: " .. spellCastOnCellStateStr)
         ---------------------------------------------
         -- Spell cast on cellId failure processing --

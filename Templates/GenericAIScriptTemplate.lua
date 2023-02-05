@@ -55,13 +55,6 @@ function fightManagement()
         -- TODO: basicly should decide what is optimal action to undertake given the fight data context
         -- TODO: given the massive ammount of possible combinations, heuristic guidance only
 
-        ---------------------------
-        -- Spell cast validation --
-        ---------------------------
-        -- TODO: 1. calculate how many casts i can do in turn
-        -- TODO: 2. check how many times i have casted on same entity
-        -- TODO: 3. check other targets to cast on
-
         --------------------
         -- Basic strategy --
         --------------------

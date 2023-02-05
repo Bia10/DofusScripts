@@ -114,11 +114,13 @@ function routeProcessor:Run(routeDataTable, traverseMaps, fightOnMaps, gatherOnM
         end
     end
 
-    global.printMessage("[RouteProcessor] Generating move() data, map: " ..
-        normalMoveData.map .. " path: " .. normalMoveData.path .. " gather: " .. normalMoveData.gather)
+    global.printMessage("[RouteProcessor] Generating move() data," ..
+        " map: " .. normalMoveData.map .. " path: " .. normalMoveData.path ..
+        " gather: " .. normalMoveData.gather .. "fight: " .. normalMoveData.fight)
 
     -- Now we done what we wanted time to return basic data back to move() function
-    return { normalMoveData }
+    return { { map = normalMoveData.map, path = normalMoveData.path, fight = normalMoveData.fight,
+        gather = normalMoveData.gather }, }
 end
 
 function routeProcessor:ResetRouteNodes()

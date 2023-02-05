@@ -10,23 +10,23 @@ end
 function basicWaterStrategy.CastThrowingCoinsAtNearestEnemy(numberOfTimes)
     local spellId = spell.GetIdByName("Coin Throwing", "En")
 
-    if spell.HasApToCast(spellId, numberOfTimes) then
+    if spell.IsCastable(spellId) then
         for i = 1, numberOfTimes do
             local myCellId = fightCharacter:getCellId();
-            local nearestEnemycellId = fightAction:getNearestEnemy()
+            local nearestEnemyCellId = fightAction:getNearestEnemy()
 
             -- Check range and try casting
-            if spell.IsTargetInRange(spellId, nearestEnemycellId) then
-                spell.TryCastingAtCellId(spellId, myCellId, nearestEnemycellId)
+            if spell.IsTargetInRange(spellId, nearestEnemyCellId) then
+                spell.TryCastingAtCellId(spellId, myCellId, nearestEnemyCellId)
             end
 
             -- If i have mp left move towards target
             if fightCharacter:getMP() > 0 then
-                fightAction:moveToWardCell(nearestEnemycellId)
+                spell.TryMoveIntoCastRange(spellId, nearestEnemyCellId)
 
                 -- Again check range and try casting
-                if spell.IsTargetInRange(spellId, nearestEnemycellId) then
-                    spell.TryCastingAtCellId(spellId, myCellId, nearestEnemycellId)
+                if spell.IsTargetInRange(spellId, nearestEnemyCellId) then
+                    spell.TryCastingAtCellId(spellId, myCellId, nearestEnemyCellId)
                 end
             end
         end
@@ -36,7 +36,7 @@ end
 function basicWaterStrategy.SummonLivingBag()
     local spellId = spell.GetIdByName("Living Bag", "En")
 
-    if spell.HasApToCast(spellId, 1) and spell.CanCastThisTurn(spellId) then
+    if spell.IsCastable(spellId) then
         local myCellId = fightCharacter:getCellId();
         local adjecentCellIds = fightAction:getAdjacentCells(myCellId)
 
