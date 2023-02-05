@@ -23,7 +23,7 @@ function basicWaterStrategy.CastThrowingCoinsAtNearestEnemy()
 
             -- If i have mp left move towards target
             if fightCharacter:getMP() > 0 then
-                spell.TryMoveIntoCastRange(spellId, nearestEnemyCellId)
+                spell.TryMoveIntoCastRange(spellId, nearestEnemyCellId, true)
 
                 -- Again check range and try casting
                 if spell.IsCastableAtTargetCell(spellId, nearestEnemyCellId) then

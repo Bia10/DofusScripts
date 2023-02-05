@@ -52,7 +52,7 @@ function characterClass.SelectAndExecuteFightStrategy(selectByMainElement)
             elseif mainStat == "Chance" then
                 -- return osamodasBasicWaterStrategy.Execute()
             elseif mainStat == "Vitality" then
-                -- return osamodasBasicVitalityStrategy.Execute() 
+                -- return osamodasBasicVitalityStrategy.Execute()
             end
         end
     elseif characterClassId == 3 then

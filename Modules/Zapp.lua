@@ -7,7 +7,6 @@ zapp.Data = {
     { ZaapId = 0, MapId = 120062979, MapPos = "1, -32", LocationNameFr = "Tainela", LocationNameEn = "Tainela" },
 }
 
-
 function zapp.TryMovingTo(mapId)
     worldMove.ToMap(mapId)
     if fightCharacter:getCellId() == mapId then
