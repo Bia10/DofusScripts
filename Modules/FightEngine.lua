@@ -1,5 +1,25 @@
 local fightEngine = {}
 
+function fightEngine.ChoseStrartingCell(occupiedAttackerCells)
+    -- free cell nearby ally cell occupied by class feca/eniprisa/ecaflip
+    for key, _ in pairs(occupiedAttackerCells) do
+        local figtherClass = fightAction:getFighter(occupiedAttackerCells[key].CellId)
+        if figtherClass == 1 or figtherClass == 2 then
+            local adjacentCellsIds = fightAction:getAdjacentCells(occupiedAttackerCells[key].CellId)
+
+            for cellKey, _ in pairs(adjacentCellsIds) do
+                if fightAction:isFreeCell(adjacentCellsIds[cellKey]) and
+                    fightAction:getDistance(adjacentCellsIds[cellKey], fightAction:getNearestEnemy()) > 3 then
+                    return adjacentCellsIds[cellKey].CellId
+                end
+            end
+        end
+    end
+
+    -- TODO: case 2 hide supports/ranged behind tankier chars
+    -- TODO: case 3 place close ranged attackers near enemy, seek glyph/aoe dmg openings
+end
+
 function fightEngine.GetFightEntities()
     if fightEngine.IsInCombat() and fightAction:getEntitiesCount() > 0 then
         local fightEntities = fightAction:getAllEntities()

@@ -4,7 +4,7 @@ local fightObserver = require("Modules.fightObserver")
 
 function move()
     if fightEngine.IsFightStart() then
-        fightObserver.LoadFightEntitites()
+        fightObserver.LoadFightContext()
 
         local attackersCells = fightObserver.GetAttackersCells()
         local defendersCells = fightObserver.GetDefendersCells()
@@ -20,13 +20,17 @@ end
 function prefightManagement(attackersCells, defendersCells)
     local FREE_CELL_ENTITY_ID = -1
     local freeAttackerCells = {}
+    local occupiedAttackerCells = {}
     local freeDefenderCells = {}
+    local occupiedDefenderCells = {}
 
     global:printSuccess("Scanning placement of attackers: ")
     for cellId, entityId in pairs(attackersCells) do
         global:printMessage("CellId: " .. cellId .. " EntityId: " .. entityId)
         if entityId == FREE_CELL_ENTITY_ID then
             freeAttackerCells.insert(cellId)
+        elseif entityId > 1 then
+            occupiedAttackerCells.insert(cellId)
         end
     end
 
@@ -35,14 +39,14 @@ function prefightManagement(attackersCells, defendersCells)
         global:printMessage("CellId: " .. cellId .. " EntityId: " .. entityId)
         if entityId == FREE_CELL_ENTITY_ID then
             freeDefenderCells.insert(cellId)
+        elseif entityId > 1 then
+            occupiedDefenderCells.insert(cellId)
         end
     end
 
-    -- TODO: cell selection logic
-    -- TODO: case 1 aoe buffs: search for empty cell wich has adjecent cells ocupied by allies
-    -- TODO: case 2 hide supports/ranged behind tankier chars
-    -- TODO: case 3 place close ranged attackers near enemy, seek glyph/aoe dmg openings
-    -- fightAction:chooseCell(chosenCellId)
+    local chosenCellId = fightEngine.ChoseStrartingCell(occupiedAttackerCells)
+
+    fightAction:chooseCell(chosenCellId)
 end
 
 -- Main function managing the AI of character wich executes the script

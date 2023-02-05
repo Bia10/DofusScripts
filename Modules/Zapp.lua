@@ -9,7 +9,7 @@ zapp.Data = {
 
 function zapp.TryMovingTo(mapId)
     worldMove.ToMap(mapId)
-    if fightCharacter:getCellId() == mapId then
+    if map.currentMapId() == mapId then
         global:printMessage("[Zaap] moved to zaap at mapId: " .. mapId .. ".")
         return true
     end
