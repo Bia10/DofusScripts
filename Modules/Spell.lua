@@ -3,10 +3,12 @@ local utils = require("Modules.Utils")
 local spell = {}
 
 spell.Data = {
-    { Id = 0, NameFr = "Coup de poing", NameEn = "Punch", ApCost = 3, DefaultRange = 1, RecastTime = 1 },
+    { Id = 0, NameFr = "Coup de poing", NameEn = "Punch", ApCost = 3, DefaultRange = 1, LosRequired = false,
+        TargetRequired = false, RecastTime = 1 },
     { Id = 7533, NameFr = "Lancer de Pièces", NameEn = "Coin Throwing", ApCost = 2, DefaultRange = 8, LosRequired = true,
-        RecastTime = 1, CastsPerTurnPerTarget = 3 },
-    { Id = 7535, NameFr = "Sac Animé", NameEn = "Living Bag", ApCost = 2, DefaultRange = 1, RecastTime = 4 },
+        TargetRequired = true, RecastTime = 1, CastsPerTurnPerTarget = 3 },
+    { Id = 7535, NameFr = "Sac Animé", NameEn = "Living Bag", ApCost = 2, DefaultRange = 1, LosRequired = false,
+        TargetRequired = false, EmptyCellRequired = true, RecastTime = 4 },
 }
 
 spell.CastOnCellState = {
@@ -52,6 +54,10 @@ function spell.GetSpellParam(spellId, param)
                 return value.CastsPerTurnPerTarget
             elseif param == "LosRequired" then
                 return value.LosRequired
+            elseif param == "TargetRequired" then
+                return value.TargetRequired
+            elseif param == "EmptyCellRequired" then
+                return value.EmptyCellRequired
             end
         end
     end
@@ -88,16 +94,12 @@ function spell.IsTargetCellInRange(spellId, myCellId, targetCellId)
     end
 end
 
-function spell.IsTargetCellInLineOfSight(spellId, myCellId, targetCellId)
-    local isLineOfSightRequired = spell.GetSpellParam(spellId, "LosRequired")
+function spell.IsTargetCellInLineOfSight(myCellId, targetCellId)
+    return fightAction:inLineOfSight(myCellId, targetCellId) == true
+end
 
-    if isLineOfSightRequired == false then
-        return true
-    elseif isLineOfSightRequired == true and fightAction:inLineOfSight(myCellId, targetCellId) == true then
-        return true
-    end
-
-    return false
+function spell.IsTargetCellOccupied(targetCellId)
+    return fightAction:isFreeCell(targetCellId) == false
 end
 
 function spell.IsCastable(spellId, numberOfTimes)
@@ -108,6 +110,23 @@ function spell.IsCastable(spellId, numberOfTimes)
     return false
 end
 
+function spell.GetCastRequirements(spellId)
+    local spellCastRequirements = { SpellId = spellId, Requirements = {} }
+    local isLineOfSightRequired = spell.GetSpellParam(spellId, "LosRequired")
+    local isTargetRequired = spell.GetSpellParam(spellId, "TargetRequired")
+    local isEmptyCellRequired = spell.GetSpellParam(spellId, "EmptyCellRequired")
+
+    if isLineOfSightRequired == true then
+        spellCastRequirements.Requirements.insert("LosRequired")
+    elseif isTargetRequired == true then
+        spellCastRequirements.Requirements.insert("TargetRequired")
+    elseif isEmptyCellRequired == true then
+        spellCastRequirements.Requirements.insert("EmptyCellRequired")
+    end
+
+    return spellCastRequirements
+end
+
 function spell.IsCastableAtTargetCell(spellId, numberOfTimes, spellLaunchCellId, targetCellId)
     spellLaunchCellId = fightCharacter:getCellId();
 
@@ -115,11 +134,10 @@ function spell.IsCastableAtTargetCell(spellId, numberOfTimes, spellLaunchCellId,
         return false
     elseif spell.IsTargetCellInRange(spellId, spellLaunchCellId, targetCellId) == false then
         return false
-    elseif spell.IsTargetCellInLineOfSight(spellId, spellLaunchCellId, targetCellId) == false then
-        return false
+    elseif spell.ValidateAgainstRequirements(spellId, spellLaunchCellId, targetCellId) then
+        return
     end
 
-    -- TODO: empty/occupied cell requirement
     -- TODO: enemy/ally entity team type requirement
     -- TODO: minimum distance from caster requirement
     -- TODO: number of casts per turn per target requirement
@@ -127,6 +145,24 @@ function spell.IsCastableAtTargetCell(spellId, numberOfTimes, spellLaunchCellId,
     -- TODO: total ammount of summons per character requirement
 
     return true
+end
+
+function spell.ValidateAgainstRequirements(spellId, spellLaunchCellId, targetCellId)
+    local spellCastRequirements = spell.GetCastRequirements(spellId)
+
+    for _, value in pairs(spellCastRequirements.Requirements) do
+        if #value.Requirements > 0 then
+            for _, value in pairs(value.Requirements) do
+                if value == "LosRequired" then
+                    return spell.IsTargetCellInLineOfSight(spellLaunchCellId, targetCellId) == false
+                elseif value == "TargetRequired" then
+                    return spell.IsTargetCellOccupied(targetCellId) == true
+                elseif value == "EmptyCellRequired" then
+                    return spell.IsTargetCellOccupied(targetCellId) == false
+                end
+            end
+        end
+    end
 end
 
 function spell.TryMoveIntoCastRange(spellId, targetCellId, onFailMoveTowardsTarget)
