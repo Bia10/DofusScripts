@@ -77,14 +77,13 @@ function spell.HasApToCast(spellId, numberOfTimes)
 end
 
 function spell.IsTargetCellInRange(spellId, myCellId, targetCellId)
-    local distanceToTargetCell = fightAction:getDistance(myCellId, targetCellId)
     local spellDefaultRange = spell.GetSpellParam(spellId, "DefaultRange")
     local characterRangeBonus = fightCharacter:getRange()
 
     -- TODO: we assume that spell range is modyfiable, we asume reuirement for line of sight
     -- TODO: we assume a level 1 spell range as its actually progressive
     -- TODO: we assume spell is not required to be cast in geometric shape (only in line, only in circle etc...)
-    if distanceToTargetCell < (spellDefaultRange + characterRangeBonus) then
+    if fightAction:getDistance(myCellId, targetCellId) < (spellDefaultRange + characterRangeBonus) then
         return true
     end
 end
@@ -94,9 +93,7 @@ function spell.IsTargetCellInLineOfSight(spellId, myCellId, targetCellId)
 
     if isLineOfSightRequired == false then
         return true
-    end
-
-    if isLineOfSightRequired == true and fightAction:inLineOfSight(myCellId, targetCellId) == true then
+    elseif isLineOfSightRequired == true and fightAction:inLineOfSight(myCellId, targetCellId) == true then
         return true
     end
 
@@ -107,36 +104,51 @@ function spell.IsCastable(spellId, numberOfTimes)
     if spell.HasApToCast(spellId, numberOfTimes) and spell.CanCastThisTurn(spellId) then
         return true
     end
+
     return false
 end
 
-function spell.IsCastableAtTargetCell(spellId, numberOfTimes, targetCellId)
-    local myCellId = fightCharacter:getCellId();
+function spell.IsCastableAtTargetCell(spellId, numberOfTimes, spellLaunchCellId, targetCellId)
+    spellLaunchCellId = fightCharacter:getCellId();
 
     if spell.IsCastable(spellId, numberOfTimes) == false then
         return false
-    end
-
-    if spell.IsTargetCellInRange(spellId, myCellId, targetCellId) == false then
+    elseif spell.IsTargetCellInRange(spellId, spellLaunchCellId, targetCellId) == false then
+        return false
+    elseif spell.IsTargetCellInLineOfSight(spellId, spellLaunchCellId, targetCellId) == false then
         return false
     end
 
-    if spell.IsTargetCellInLineOfSight(spellId, myCellId, targetCellId) == false then
-        return false
-    end
+    -- TODO: empty/occupied cell requirement
+    -- TODO: enemy/ally entity team type requirement
+    -- TODO: minimum distance from caster requirement
+    -- TODO: number of casts per turn per target requirement
+    -- TODO: total number of casts per turn requirement
+    -- TODO: total ammount of summons per character requirement
 
     return true
 end
 
-function spell.TryMoveIntoCastRange(spellId, targetCellId)
+function spell.TryMoveIntoCastRange(spellId, targetCellId, onFailMoveTowardsTarget)
     local reachableCellsIds = fightAction:getReachableCells()
-    local spellDefaultRange = spell.GetSpellParam(spellId, "DefaultRange")
-    local characterRangeBonus = fightCharacter:getRange()
+    local maxCastsPerTurnPerTarget = spell.GetSpellParam(spellId, "CastsPerTurnPerTarget")
 
-    for _, value in pairs(reachableCellsIds) do
-        if fightAction:getDistance(value, targetCellId) < (spellDefaultRange + characterRangeBonus) then
-            fightAction:moveToWardCell(value)
+    if #reachableCellsIds < 1 or maxCastsPerTurnPerTarget < 1 then
+        return
+    end
+
+    for _, reachableCellsId in pairs(reachableCellsIds) do
+        if spell.IsCastableAtTargetCell(spellId, maxCastsPerTurnPerTarget, reachableCellsId, targetCellId) then
+            global:printMessage("[SPELL] found rechable cell: " ..
+                reachableCellsId .. " where target cell: " .. targetCellId .. " can be attacked moving towards it.")
+            fightAction:moveToWardCell(reachableCellsId)
+            return
         end
+    end
+
+    global:printMessage("[SPELL] failed to find a rechable cell where target cell: " .. targetCellId .. " can be attacked.")
+    if onFailMoveTowardsTarget == true then
+        fightAction:moveToWardCell(targetCellId)
     end
 end
 
