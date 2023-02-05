@@ -8,9 +8,9 @@ spell.Data = {
  }
 
  spell.CastOnCellState = {
-        CastingPossible = 0,
-        LimitOfCastsPerTurnReached = 1,
-        SpellOnCooldown = 2,
+        CASTING_POSSIBLE = 0,
+        LIMIT_OF_CASTS_PER_TURN_REACHED = 1,
+        SPELL_ON_COOLDOWN = 2,
  }
 
  function spell.GetIdByName(spellName, localization)
@@ -25,6 +25,11 @@ spell.Data = {
 
 function spell.CastOnCellStateToString(curCastOnCellState)
         return utils.switch(spell.CastOnCellState, curCastOnCellState)
+end
+
+function spell.CanCastThisTurn(turnNumber)
+        -- Assuming that first turn its always castable, may not be
+      return fightAction:getCurrentTurn() == 1 or fightAction:getCurrentTurn() % turnNumber == 0
 end
 
 return spell

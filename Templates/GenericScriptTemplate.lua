@@ -2,12 +2,30 @@
 -- Generic settings --
 ----------------------
 
+-- These script params are global meaning they will be taken into account by calling various API methods,
+-- like map:fight() will take into account these script params.
+
+-- Hours of a day during wich bot will be offline from 0 = 0:00 to 23 = 23:59
+-- Type: global table of of integers (hours)
+PLANNING = { 1, 2, 4 }
 -- Items to automatically delete when out of combat
 -- Type: global table of of integers (itemIds)
-AUTO_DELETE = {}
+AUTO_DELETE = { 156, 5478, 546, 1221 }
 -- Ressources to gather if availible at map
 -- Type: global table of of integers (ressourceIds)
-GATHER = {}
+GATHER = { 84, 64 }
+-- Indication wherever to open or not ressource bags
+-- Type: global boolean
+OPEN_BAGS = true
+-- Indication wherever to ignore or not guild invites
+-- Type: global boolean
+IGNORE_REQUEST_GUILD = true
+-- Indication wherever to ignore or not duel invites
+-- Type: global boolean
+IGNORE_REQUEST_DUEL = true
+-- Indication wherever to ignore or not trade invites
+-- Type: global boolean
+IGNORE_REQUEST_EXCHANGE = true
 -- Minimum number of monsters in mob group to attack it
 -- Type: global integer variable
 MIN_MONSTERS = 1
@@ -16,10 +34,10 @@ MIN_MONSTERS = 1
 MAX_MONSTERS = 8
 -- Required monsters in mob group to attack it
 -- Type: global table of integers (mobIds)
-FORCE_MONSTERS = {}
+FORCE_MONSTERS = { 156 }
 -- Forbidden monsters in mob group to never attack it
 -- Type: global table of integers (mobIds)
-FORBIDDEN_MONSTERS = {}
+FORBIDDEN_MONSTERS = {2316, 1756}
 
 --------------------
 -- Main Functions --
@@ -59,6 +77,9 @@ end
 -- This executes if script abnormaly terminates (crash, disconnect etc...)
 function stopped()
     global:printError("Warning script terminated!")
+    
+    --TODO: check if all group characters are online and at same map, if so try restarting script
+    --TODO: monitor time of launch and if stopped() is called within timeout disconnect as script is not working properly
     -- Reloads script and executes it
     -- global:reloadScript()
     -- Disconnects client from server

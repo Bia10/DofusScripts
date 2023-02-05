@@ -29,34 +29,12 @@ function fightManagement()
             -- TODO: 1. calculate how many casts i can do in turn 
             -- TODO: 2. check how many times i have casted on same entity
             -- TODO: 3. check other targets to cast on
-        
-            -- Assuming default cast options, cast coin throwing at nearest enemy cellId 3 times
-            for i = 1, 3 do
-                    -- Get my cellId
-                    local myCellId = fightCharacter:getCellId();
-                    -- Get cellId of nearestEnemy
-                    local nearestEnemycellId = fightAction:getNearestEnemy()
-                    -- Get spellId of Coin Throwing
-                    local spellId = spell.GetIdByName("Coin Throwing", "En")  
-                    -- Verification if we can cast spell on given cellId, result is a enum defined in spell.CastOnCellState
-                    local spellCastOnCellState = fightAction:canCastSpellOnCell(myCellId, spellId, nearestEnemycellId)
-                    -- Convert reason int value to string
-                    local spellCastOnCellStateStr = spell.CastOnCellStateToString(spellCastOnCellState)
-               
-                    -- Its not possble to cast given spellId at given cellId for a reason
-                    if (spellCastOnCellState ~= spell.CastOnCellState.CastingPossible) then
-                        global:printError("Its not possible to cast: " ..spellId.. " on cellId: " ..myCellId.. " reason: " ..spellCastOnCellStateStr)
-                        ---------------------------------------------
-                        -- Spell cast on cellId failure processing --
-                        ---------------------------------------------
-                        -- TODO: collect data, what is the reason of failure?
-                        -- TODO: is possible to fix the reason of failure?
-                    end
 
-                    -- Casting possible then cast spell on cellId
-                    fightAction:castSpellOnCell(spellId, nearestEnemycellId)
-            end
-
+            --------------------
+            -- Basic strategy --
+            --------------------
+            BasicWaterEnuStrategy()
+    
             --------------------------------------------
             -- After doing actions check positioning --
             --------------------------------------------
@@ -66,4 +44,37 @@ function fightManagement()
             -- When all is done then end turn
             fightAction:passTurn()
     end
+end
+
+function BasicWaterEnuStrategy()
+    CastThrowingCoinsAtNearestEnemy()
+end
+
+function CastThrowingCoinsAtNearestEnemy()
+               -- Assuming default cast options, cast coin throwing at nearest enemy cellId 3 times
+               for i = 1, 3 do
+                -- Get my cellId
+                local myCellId = fightCharacter:getCellId();
+                -- Get cellId of nearestEnemy
+                local nearestEnemycellId = fightAction:getNearestEnemy()
+                -- Get spellId of Coin Throwing
+                local spellId = spell.GetIdByName("Coin Throwing", "En")  
+                -- Verification if we can cast spell on given cellId, result is a enum defined in spell.CastOnCellState
+                local spellCastOnCellState = fightAction:canCastSpellOnCell(myCellId, spellId, nearestEnemycellId)
+                -- Convert reason int value to string
+                local spellCastOnCellStateStr = spell.CastOnCellStateToString(spellCastOnCellState)
+           
+                -- Its not possble to cast given spellId at given cellId for a reason
+                if (spellCastOnCellState ~= spell.CastOnCellState.CASTING_POSSIBLE) then
+                    global:printError("Its not possible to cast: " ..spellId.. " on cellId: " ..myCellId.. " reason: " ..spellCastOnCellStateStr)
+                    ---------------------------------------------
+                    -- Spell cast on cellId failure processing --
+                    ---------------------------------------------
+                    -- TODO: collect data, what is the reason of failure?
+                    -- TODO: is possible to fix the reason of failure?
+                end
+
+                -- Casting possible then cast spell on cellId
+                fightAction:castSpellOnCell(spellId, nearestEnemycellId)
+        end
 end
