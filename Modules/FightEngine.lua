@@ -1,5 +1,27 @@
 local fightEngine = {}
 
+function fightEngine.GetFightEntities()
+    if fightEngine.IsInCombat() and fightAction:getEntitiesCount() > 0 then
+        local fightEntities = fightAction:getAllEntities()
+
+        if #fightEntities > 0 then
+            return fightEntities
+        end
+    end
+end
+
+function fightEngine.IsFightStart()
+    return global:isInFight() == true and fightAction:getCurrentTurn() == 0
+end
+
+function fightEngine.IsFirstTurn()
+    return global:isInFight() == true and fightAction:getCurrentTurn() == 1
+end
+
+function fightEngine.IsInCombat()
+    return global:afterFight() == false and global:isInFight() == true and fightAction:getCurrentTurn() >= 0
+end
+
 function fightEngine.setpecificMonsterGroups(monsterIds, mins, maxs)
     local specificMobGroups = {}
 

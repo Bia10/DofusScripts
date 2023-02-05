@@ -1,4 +1,5 @@
 local utils = require("Modules.Utils")
+local fightEngine = require("Modules.FightEngine")
 
 local spell = {}
 
@@ -70,7 +71,7 @@ end
 function spell.CanCastThisTurn(spellId)
     local spellRecastTime = spell.GetSpellParam(spellId, "RecastTime")
     -- TODO: is castable at first turn?
-    return fightAction:getCurrentTurn() == 1 or fightAction:getCurrentTurn() % spellRecastTime == 0
+    return fightEngine.IsFirstTurn() or fightAction:getCurrentTurn() % spellRecastTime == 0
 end
 
 function spell.HasApToCast(spellId, numberOfTimes)

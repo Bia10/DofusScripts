@@ -1,18 +1,24 @@
 local characterClass = require("Modules.CharacterClass")
+local fightEngine = require("Modules.FightEngine")
+local fightObserver = require("Modules.fightObserver")
 
 function move()
+    if fightEngine.IsFightStart() then
+        fightObserver.LoadFightEntitites()
+
+        local attackersCells = fightObserver.GetAttackersCells()
+        local defendersCells = fightObserver.GetDefendersCells()
+
+        prefightManagement(attackersCells, defendersCells)
+        fightManagement()
+    end
+
     return {}
 end
 
--- example of input data
-local attackersCellsExample = {
-    { cellId = 0, entityId = 0 }
-}
-
-local FREE_CELL_ENTITY_ID = -1
-
 -- Main function managing pre-fight placement of attackers and defenders
 function prefightManagement(attackersCells, defendersCells)
+    local FREE_CELL_ENTITY_ID = -1
     local freeAttackerCells = {}
     local freeDefenderCells = {}
 
@@ -46,6 +52,10 @@ function fightManagement()
         --------------------------------------------
         -- Before doing actions check positioning --
         --------------------------------------------
+        if fightEngine.IsFirstTurn() then
+            --fightEngine.CheckOportunitiesForBetterPosition()
+        end
+
         -- TODO: move away from enemy/ally? move closer to enemy/ally?
         -- TODO: move away from dranger (AOE spell, powerfull enemies, to gain range for long range spells)?
 
