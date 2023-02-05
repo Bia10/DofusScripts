@@ -5,22 +5,22 @@ local routeProcessor = {}
 routeProcessor.Nodes = {}
 routeProcessor.RouteData = {
     -- replacementNode as table of move options
-    { mapNode = "212601864", replacementNode = {"left", "top"} },
-    { mapNode = "212601350", replacementNode = {"right", "bottom"} },
+    { mapNode = "212601864", replacementNode = { "left", "top" } },
+    { mapNode = "212601350", replacementNode = { "right", "bottom" } },
     -- with fight node
     { mapNode = "172753417", replacementNode = "right", fightNode = true },
     { mapNode = "172753928", replacementNode = "right", fightNode = true },
-        -- with gatherNode
+    -- with gatherNode
     { mapNode = "172754952", replacementNode = "top", gatherNode = true },
     -- normal replacementNode
-    { mapNode = "212601349", replacementNode = "top" },	
+    { mapNode = "212601349", replacementNode = "top" },
     -- with replacementNode replaced by customFunctionNode
     { mapNode = "179830787", customFunctionNode = routeProcessor.takeRandomBreak() },
 }
 
 function routeProcessor.takeRandomBreak()
     local miliseconds = math.random(20000, 120000)
-    global.printMessage("Breaking for " ..miliseconds.. " ms.")
+    global.printMessage("Breaking for " .. miliseconds .. " ms.")
     global:delay(miliseconds)
 end
 
@@ -42,7 +42,8 @@ function routeProcessor:Run(routeDataTable)
 
     -- There are no data for given mapId or mapPos
     if not routeDataTableRow then
-        global.printMessage("[RouteProcessor] None route data found on mapPos: " ..currentMapPos.. " (" ..currentMapId.. ").")
+        global.printMessage("[RouteProcessor] None route data found on mapPos: " ..
+            currentMapPos .. " (" .. currentMapId .. ").")
         return self.noneRouteDataTableRow()
     end
 
@@ -94,7 +95,8 @@ function routeProcessor:Run(routeDataTable)
     normalMoveData.map = routeDataTableRow.mapNode
     normalMoveData.path = routeDataTableRow.replacementNode
 
-	global.printMessage("[RouteProcessor] Generating move() data, map: " ..normalMoveData.map.. " path: " ..normalMoveData.path.. " gather: " ..normalMoveData.gather)
+    global.printMessage("[RouteProcessor] Generating move() data, map: " ..
+        normalMoveData.map .. " path: " .. normalMoveData.path .. " gather: " .. normalMoveData.gather)
 
     -- Now we done what we wanted time to return basic data back to move() function
     return { normalMoveData }
@@ -105,7 +107,7 @@ function routeProcessor:ResetNodes()
 end
 
 function routeProcessor.noneRouteDataTableRow()
-	global.printMessage("[RouteProcessor] Nothing to do, nowhere to move ... going into heavenbag.")
+    global.printMessage("[RouteProcessor] Nothing to do, nowhere to move ... going into heavenbag.")
     return { { map = map.currentMapId(), havenbag = true }, }
 end
 

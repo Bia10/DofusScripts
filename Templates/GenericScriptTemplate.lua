@@ -37,7 +37,7 @@ MAX_MONSTERS = 8
 FORCE_MONSTERS = { 156 }
 -- Forbidden monsters in mob group to never attack it
 -- Type: global table of integers (mobIds)
-FORBIDDEN_MONSTERS = {2316, 1756}
+FORBIDDEN_MONSTERS = { 2316, 1756 }
 
 --------------------
 -- Main Functions --
@@ -51,7 +51,7 @@ function move()
         -- map defined by mapX, mapY pos, path to change map specifies map box edge and also concrete cellId to use
         { map = "0,0", path = "left(364)" },
         -- map defined by mapId, path defined by combination of possible paths results in a randomized selection of one result
-        { map = "9856523", path = "top|left|right"},
+        { map = "9856523", path = "top|left|right" },
     }
 end
 
@@ -77,7 +77,7 @@ end
 -- This executes if script abnormaly terminates (crash, disconnect etc...)
 function stopped()
     global:printError("Warning script terminated!")
-    
+
     --TODO: check if all group characters are online and at same map, if so try restarting script
     --TODO: monitor time of launch and if stopped() is called within timeout disconnect as script is not working properly
     -- Reloads script and executes it
