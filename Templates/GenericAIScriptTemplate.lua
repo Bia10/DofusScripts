@@ -1,33 +1,69 @@
-local SpellsModule = require("Constants.Spells")
-local CastSpellState = require("Constants.CastSpellState")
+local spell = require("Modules.Spell")
 
 function move()
 	return {}
 end
 
+-- Main function managing the AI of character wich executes the script
 function fightManagement()
     -- Check if i am at turn so logic runs only for my char
     if (fightCharacter:isItMyTurn() == true) then
+            --------------------------------------------
+            -- Before doing actions check positioning --
+            --------------------------------------------
+            -- TODO: move away from enemy/ally? move closer to enemy/ally?
+            -- TODO: move away from dranger (AOE spell, powerfull enemies, to gain range for long range spells)?   
+
             -- Assuming out of range so move towards nearest enemy
             fightAction:moveToWardCell(fightAction:getNearestEnemy())
-            -- 3 times launch coin throwing at nearest enemy cellId
-            for i = 1, 3 do
 
+            --------------------------------
+            -- Action selection algorithm --
+            --------------------------------
+            -- TODO: basicly should decide what is optimal action to undertake given the fight data context
+            -- TODO: given the massive ammount of possible combinations, heuristic guidance only
+
+            ---------------------------
+            -- Spell cast validation --
+            ---------------------------
+            -- TODO: 1. calculate how many casts i can do in turn 
+            -- TODO: 2. check how many times i have casted on same entity
+            -- TODO: 3. check other targets to cast on
+        
+            -- Assuming default cast options, cast coin throwing at nearest enemy cellId 3 times
+            for i = 1, 3 do
+                    -- Get my cellId
                     local myCellId = fightCharacter:getCellId();
-                    -- get cellId of nearestEnemy
+                    -- Get cellId of nearestEnemy
                     local nearestEnemycellId = fightAction:getNearestEnemy()
-                    -- get spellId of Coin Throwing
-                    local spellId = SpellsModule.GetSpellIdByName("Coin Throwing", "En")
-                    
-                    -- Verification if we can cast spell
-                    if (fightAction:canCastSpellOnCell(myCellId, spellId, nearestEnemycellId) == CastSpellState.CastingPossible) then
-                            -- Cast spell on cellId
-                            fightAction:castSpellOnCell(spellId, nearestEnemycellId)
+                    -- Get spellId of Coin Throwing
+                    local spellId = spell.GetIdByName("Coin Throwing", "En")  
+                    -- Verification if we can cast spell on given cellId, result is a enum defined in spell.CastOnCellState
+                    local spellCastOnCellState = fightAction:canCastSpellOnCell(myCellId, spellId, nearestEnemycellId)
+                    -- Convert reason int value to string
+                    local spellCastOnCellStateStr = spell.CastOnCellStateToString(spellCastOnCellState)
+               
+                    -- Its not possble to cast given spellId at given cellId for a reason
+                    if (spellCastOnCellState ~= spell.CastOnCellState.CastingPossible) then
+                        global:printError("Its not possible to cast: " ..spellId.. " on cellId: " ..myCellId.. " reason: " ..spellCastOnCellStateStr)
+                        ---------------------------------------------
+                        -- Spell cast on cellId failure processing --
+                        ---------------------------------------------
+                        -- TODO: collect data, what is the reason of failure?
+                        -- TODO: is possible to fix the reason of failure?
                     end
 
-                    -- if result != 0 then integer is enum of possible failures
+                    -- Casting possible then cast spell on cellId
+                    fightAction:castSpellOnCell(spellId, nearestEnemycellId)
             end
-            -- End our turn
+
+            --------------------------------------------
+            -- After doing actions check positioning --
+            --------------------------------------------
+            -- TODO: move away from enemy/ally? move closer to enemy/ally?
+            -- TODO: move away from dranger (AOE spell, powerfull enemies, to gain range for long range spells)?   
+
+            -- When all is done then end turn
             fightAction:passTurn()
     end
 end
