@@ -82,6 +82,8 @@ function spell.HasApToCast(spellId, numberOfTimes)
     end
 end
 
+-- TODO: rename ro IsTargetCellWithinRangeInterval
+-- TODO: use spell DefaultRangeMin, DefaultRangeMax
 function spell.IsTargetCellInRange(spellId, myCellId, targetCellId)
     local spellDefaultRange = spell.GetSpellParam(spellId, "DefaultRange")
     local characterRangeBonus = fightCharacter:getRange()
@@ -103,11 +105,8 @@ function spell.IsTargetCellOccupied(targetCellId)
 end
 
 function spell.IsCastable(spellId, numberOfTimes)
-    if spell.HasApToCast(spellId, numberOfTimes) and spell.CanCastThisTurn(spellId) then
-        return true
-    end
 
-    return false
+    return spell.HasApToCast(spellId, numberOfTimes) == true and spell.CanCastThisTurn(spellId) == true
 end
 
 function spell.GetCastRequirements(spellId)
@@ -134,8 +133,8 @@ function spell.IsCastableAtTargetCell(spellId, numberOfTimes, spellLaunchCellId,
         return false
     elseif spell.IsTargetCellInRange(spellId, spellLaunchCellId, targetCellId) == false then
         return false
-    elseif spell.ValidateAgainstRequirements(spellId, spellLaunchCellId, targetCellId) then
-        return
+    elseif spell.ValidateAgainstRequirements(spellId, spellLaunchCellId, targetCellId) == false then
+        return false
     end
 
     -- TODO: enemy/ally entity team type requirement
@@ -152,12 +151,12 @@ function spell.ValidateAgainstRequirements(spellId, spellLaunchCellId, targetCel
 
     for _, value in pairs(spellCastRequirements.Requirements) do
         if #value.Requirements > 0 then
-            for _, value in pairs(value.Requirements) do
-                if value == "LosRequired" then
-                    return spell.IsTargetCellInLineOfSight(spellLaunchCellId, targetCellId) == false
-                elseif value == "TargetRequired" then
+            for _, requirementName in pairs(value.Requirements) do
+                if requirementName == "LosRequired" then
+                    return spell.IsTargetCellInLineOfSight(spellLaunchCellId, targetCellId) == true
+                elseif requirementName == "TargetRequired" then
                     return spell.IsTargetCellOccupied(targetCellId) == true
-                elseif value == "EmptyCellRequired" then
+                elseif requirementName == "EmptyCellRequired" then
                     return spell.IsTargetCellOccupied(targetCellId) == false
                 end
             end
@@ -182,7 +181,8 @@ function spell.TryMoveIntoCastRange(spellId, targetCellId, onFailMoveTowardsTarg
         end
     end
 
-    global:printMessage("[SPELL] failed to find a rechable cell where target cell: " .. targetCellId .. " can be attacked.")
+    global:printMessage("[SPELL] failed to find a rechable cell where target cell: " ..
+        targetCellId .. " can be attacked.")
     if onFailMoveTowardsTarget == true then
         fightAction:moveToWardCell(targetCellId)
     end
