@@ -3,9 +3,9 @@ local utils = require("Modules.Utils")
 local spell = {}
 
 spell.Data = {
-    { Id = 0, NameFr = "Coup de poing", NameEn = "Punch", ApCost = 3, DefaultRange = 1 },
-    { Id = 13338, NameFr = "Lancer de Pièces", NameEn = "Coin Throwing", ApCost = 2, DefaultRange = 8 },
-    { Id = 13338, NameFr = "Sac Animé", NameEn = "Living Bag", ApCost = 2, DefaultRange = 1, RecastTime = 4 },
+    { Id = 0, NameFr = "Coup de poing", NameEn = "Punch", ApCost = 3, DefaultRange = 1, RecastTime = 1 },
+    { Id = 7533, NameFr = "Lancer de Pièces", NameEn = "Coin Throwing", ApCost = 2, DefaultRange = 8, RecastTime = 1 },
+    { Id = 7535, NameFr = "Sac Animé", NameEn = "Living Bag", ApCost = 2, DefaultRange = 1, RecastTime = 4 },
 }
 
 spell.CastOnCellState = {
@@ -16,9 +16,9 @@ spell.CastOnCellState = {
 
 function spell.GetIdByName(spellName, localization)
     for _, value in pairs(spell.Data) do
-        if (localization == "Fr" and value.NameFr == spellName) then
+        if localization == "Fr" and value.NameFr == spellName then
             return value.Id
-        elseif (localization == "En" and value.NameEn == spellName) then
+        elseif localization == "En" and value.NameEn == spellName then
             return value.Id
         end
     end
@@ -26,11 +26,13 @@ end
 
 function spell.GetSpellParam(spellId, param)
     for _, value in pairs(spell.Data) do
-        if (value.Id == spellId) then
-            if (param == "ApCost") then
+        if value.Id == spellId then
+            if param == "ApCost" then
                 return value.ApCost
-            elseif (param == "DefaultRange") then
+            elseif param == "DefaultRange" then
                 return value.DefaultRange
+            elseif param == "RecastTime" then
+                return value.RecastTime
             end
         end
     end
@@ -48,9 +50,9 @@ end
 
 function spell.HasApToCast(spellId, numberOfTimes)
     local spellApCost = spell.GetApCost(spellId)
-    if (numberOfTimes == 1) then
+    if numberOfTimes == 1 then
         return fightCharacter:getAP() >= spellApCost
-    elseif (numberOfTimes > 1) then
+    elseif numberOfTimes > 1 then
         return (fightCharacter:getAP() * numberOfTimes) >= (spellApCost * numberOfTimes)
     end
 end
@@ -64,7 +66,7 @@ function spell.IsTargetInRange(spellId, targetCellId)
     -- TODO: we assume that spell range is modyfiable, we asume reuirement for line of sight
     -- TODO: we assume a level 1 spell range as its actually progressive
     -- TODO: we assume spell is not required to be cast in geometric shape (only in line, only in circle etc...)
-    if (distanceToTargetCell < (spellDefaultRange + characterRangeBonus)) then
+    if distanceToTargetCell < (spellDefaultRange + characterRangeBonus) then
         return true
     end
 end
@@ -76,7 +78,7 @@ function spell.TryCastingAtCellId(spellId, myCellId, targetCellId)
     local spellCastOnCellStateStr = spell.CastOnCellStateToString(spellCastOnCellState)
 
     -- Its not possble to cast given spellId at given cellId for a reason
-    if (spellCastOnCellState ~= spell.CastOnCellState.CASTING_POSSIBLE) then
+    if spellCastOnCellState ~= spell.CastOnCellState.CASTING_POSSIBLE then
         global:printError("Its not possible to cast: " ..
             spellId .. " on cellId: " .. targetCellId .. " reason: " .. spellCastOnCellStateStr)
         ---------------------------------------------

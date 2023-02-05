@@ -9,27 +9,40 @@ local attackersCellsExample = {
     { cellId = 0, entityId = 0 }
 }
 
+local FREE_CELL_ENTITY_ID = -1
+
 -- Main function managing pre-fight placement of attackers and defenders
 function prefightManagement(attackersCells, defendersCells)
+    local freeAttackerCells = {}
+    local freeDefenderCells = {}
 
     global:printSuccess("Scanning placement of attackers: ")
     for cellId, entityId in pairs(attackersCells) do
         global:printMessage("CellId: " .. cellId .. " EntityId: " .. entityId)
+        if entityId == FREE_CELL_ENTITY_ID then
+            freeAttackerCells.insert(cellId)
+        end
     end
 
     global:printMessage("Scanning placement of defenders: ")
     for cellId, entityId in pairs(defendersCells) do
         global:printMessage("CellId: " .. cellId .. " EntityId: " .. entityId)
+        if entityId == FREE_CELL_ENTITY_ID then
+            freeDefenderCells.insert(cellId)
+        end
     end
 
     -- TODO: cell selection logic
+    -- TODO: case 1 aoe buffs: search for empty cell wich has adjecent cells ocupied by allies
+    -- TODO: case 2 hide supports/ranged behind tankier chars
+    -- TODO: case 3 place close ranged attackers near enemy, seek glyph/aoe dmg openings
     -- fightAction:chooseCell(chosenCellId)
 end
 
 -- Main function managing the AI of character wich executes the script
 function fightManagement()
     -- Check if i am at turn so logic runs only for my char
-    if (fightCharacter:isItMyTurn() == true) then
+    if fightCharacter:isItMyTurn() == true then
         --------------------------------------------
         -- Before doing actions check positioning --
         --------------------------------------------

@@ -39,9 +39,9 @@ profession.Data = {
 
 function profession.GetNameById(professionId, localization)
         for _, value in pairs(profession.Data) do
-                if (value.Id == professionId and localization == "Fr") then
+                if value.Id == professionId and localization == "Fr" then
                         return value.NameFr
-                elseif (value.Id == professionId and localization == "En") then
+                elseif value.Id == professionId and localization == "En" then
                         return value.NameEn
                 end
         end
@@ -49,9 +49,9 @@ end
 
 function profession.GetIdByName(professionName, localization)
         for _, value in pairs(profession.Data) do
-                if (localization == "Fr" and value.NameFr == professionName) then
+                if localization == "Fr" and value.NameFr == professionName then
                         return value.Id
-                elseif (localization == "En" and value.NameEn == professionName) then
+                elseif localization == "En" and value.NameEn == professionName then
                         return value.Id
                 end
         end

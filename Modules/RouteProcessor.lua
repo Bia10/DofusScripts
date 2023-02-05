@@ -49,7 +49,7 @@ function routeProcessor:Run(routeDataTable, fightOnMaps, gatherOnMaps)
 
     -- ReplacementNodes processing wich can be a table or function type
     if routeDataTableRow.replacementNode then
-        if (type(routeDataTableRow.replacementNode) == "table") then
+        if type(routeDataTableRow.replacementNode) == "table" then
             -- locate my routeNode, is key currentMapId in the set of route nodes?
             if self.RouteNodes[currentMapId] then
                 -- change position of my routeNode to next node
@@ -69,7 +69,7 @@ function routeProcessor:Run(routeDataTable, fightOnMaps, gatherOnMaps)
             local newReplacementNode = routeDataTableRow.replacementNode[currentRouteNode]
 
             -- if its a function type, change node type at routeNode position
-            if (type(newReplacementNode) == "function") then
+            if type(newReplacementNode) == "function" then
                 routeDataTableRow.replacementNode = nil
                 routeDataTableRow.customFunctionNode = newReplacementNode
             else
@@ -84,26 +84,26 @@ function routeProcessor:Run(routeDataTable, fightOnMaps, gatherOnMaps)
     normalMoveData.path = routeDataTableRow.replacementNode
 
     -- FightNodes processing which are boolean type
-    if (routeDataTableRow.fightNode) then
-        if (type(routeDataTableRow.fightNode) == "boolean" and routeDataTableRow.fightNode == true) then
-            if (fightOnMaps == true) then
+    if routeDataTableRow.fightNode then
+        if type(routeDataTableRow.fightNode) == "boolean" and routeDataTableRow.fightNode == true then
+            if fightOnMaps == true then
                 -- TODO: custom logic
                 fightEngine.setForbiddenMonsters(fightEngine.suggestForbiddenMonsters)
                 fightEngine.setRequiredMonsters(fightEngine.suggestRequiredMonsters)
                 -- Fight will take into consideration the global script params!
                 map:fight()
-            elseif (fightOnMaps == false) then
+            elseif fightOnMaps == false then
                 normalMoveData.fight = routeDataTableRow.fightNode
             end
         end
     end
 
     -- FightNodes processing which are boolean type
-    if (routeDataTableRow.gatherNode) then
-        if (type(routeDataTableRow.gatherNode) == "boolean" and routeDataTableRow.gatherNode == true) then
-            if (gatherOnMaps == true) then
+    if routeDataTableRow.gatherNode then
+        if type(routeDataTableRow.gatherNode) == "boolean" and routeDataTableRow.gatherNode == true then
+            if gatherOnMaps == true then
                 -- TODO: custom logic
-            elseif (gatherOnMaps == false) then
+            elseif gatherOnMaps == false then
                 normalMoveData.gather = routeDataTableRow.gatherNode
             end
         end
