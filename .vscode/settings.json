@@ -11,7 +11,8 @@
         "stopped",
         "fightManagement",
         "prefightManagement",
-        "character"
+        "character",
+        "inventory"
     ],
 
     "Lua.format.defaultConfig": {

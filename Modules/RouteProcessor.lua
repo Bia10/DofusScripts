@@ -91,7 +91,7 @@ function routeProcessor:Run(routeDataTable, traverseMaps, fightOnMaps, gatherOnM
     -- FightNodes processing which are boolean type
     if routeDataTableRow.fightNode then
         if type(routeDataTableRow.fightNode) == "boolean" and routeDataTableRow.fightNode == true then
-            if fightOnMaps == true then
+            if fightOnMaps == true and global:maximumNumberFightsOfDay() == false then
                 -- TODO: custom logic
                 fightEngine.setForbiddenMonsters(fightEngine.suggestForbiddenMonsters())
                 fightEngine.setRequiredMonsters(fightEngine.suggestRequiredMonsters())
