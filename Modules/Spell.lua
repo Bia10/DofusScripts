@@ -4,7 +4,8 @@ local spell = {}
 
 spell.Data = {
     { Id = 0, NameFr = "Coup de poing", NameEn = "Punch", ApCost = 3, DefaultRange = 1, RecastTime = 1 },
-    { Id = 7533, NameFr = "Lancer de Pièces", NameEn = "Coin Throwing", ApCost = 2, DefaultRange = 8, RecastTime = 1 },
+    { Id = 7533, NameFr = "Lancer de Pièces", NameEn = "Coin Throwing", ApCost = 2, DefaultRange = 8, LosRequired = true,
+        RecastTime = 1, CastsPerTurnPerTarget = 3 },
     { Id = 7535, NameFr = "Sac Animé", NameEn = "Living Bag", ApCost = 2, DefaultRange = 1, RecastTime = 4 },
 }
 
@@ -47,6 +48,10 @@ function spell.GetSpellParam(spellId, param)
                 return value.DefaultRange
             elseif param == "RecastTime" then
                 return value.RecastTime
+            elseif param == "CastsPerTurnPerTarget" then
+                return value.CastsPerTurnPerTarget
+            elseif param == "LosRequired" then
+                return value.LosRequired
             end
         end
     end
@@ -71,8 +76,7 @@ function spell.HasApToCast(spellId, numberOfTimes)
     end
 end
 
-function spell.IsTargetInRange(spellId, targetCellId)
-    local myCellId = fightCharacter:getCellId();
+function spell.IsTargetInRange(spellId, myCellId, targetCellId)
     local distanceToTargetCell = fightAction:getDistance(myCellId, targetCellId)
     local spellDefaultRange = spell.GetSpellParam(spellId, "DefaultRange")
     local characterRangeBonus = fightCharacter:getRange()
@@ -85,13 +89,34 @@ function spell.IsTargetInRange(spellId, targetCellId)
     end
 end
 
+function spell.IsTargetInLineOfSight(spellId, myCellId, targetCellId)
+    local spellRequiresLineOfSight = spell.GetSpellParam(spellId, "LosRequired")
+    return spellRequiresLineOfSight == true and fightAction:inLineOfSight(myCellId, targetCellId) == true
+end
+
 function spell.IsCastable(spellId, numberOfTimes)
     if spell.HasApToCast(spellId, numberOfTimes) and spell.CanCastThisTurn(spellId) then
         return true
     end
-    -- TODO: range check if requred
-    -- TODO: target check
     return false
+end
+
+function spell.IsCastableAtTargetCell(spellId, numberOfTimes, targetCellId)
+    local myCellId = fightCharacter:getCellId();
+
+    if spell.IsCastable(spellId, numberOfTimes) == false then
+        return false
+    end
+
+    if spell.IsTargetInRange(spellId, myCellId, targetCellId) == false then
+        return false
+    end
+
+    if spell.IsTargetInLineOfSight(spellId, myCellId, targetCellId) then
+        return false
+    end
+
+    return true
 end
 
 function spell.TryMoveIntoCastRange(spellId, targetCellId)

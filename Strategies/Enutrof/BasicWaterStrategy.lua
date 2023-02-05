@@ -4,19 +4,20 @@ local basicWaterStrategy = {}
 
 function basicWaterStrategy.Execute()
     basicWaterStrategy.SummonLivingBag()
-    basicWaterStrategy.CastThrowingCoinsAtNearestEnemy(3)
+    basicWaterStrategy.CastThrowingCoinsAtNearestEnemy()
 end
 
-function basicWaterStrategy.CastThrowingCoinsAtNearestEnemy(numberOfTimes)
+function basicWaterStrategy.CastThrowingCoinsAtNearestEnemy()
     local spellId = spell.GetIdByName("Coin Throwing", "En")
+    local maxCastsPerTurnPerTarget = spell.GetSpellParam(spellId, "CastsPerTurnPerTarget")
 
-    if spell.IsCastable(spellId) then
-        for i = 1, numberOfTimes do
+    if spell.IsCastable(spellId, maxCastsPerTurnPerTarget) then
+        for i = 1, maxCastsPerTurnPerTarget, 1 do
             local myCellId = fightCharacter:getCellId();
             local nearestEnemyCellId = fightAction:getNearestEnemy()
 
             -- Check range and try casting
-            if spell.IsTargetInRange(spellId, nearestEnemyCellId) then
+            if spell.IsCastableAtTargetCell(spellId, nearestEnemyCellId) then
                 spell.TryCastingAtCellId(spellId, myCellId, nearestEnemyCellId)
             end
 
@@ -25,7 +26,7 @@ function basicWaterStrategy.CastThrowingCoinsAtNearestEnemy(numberOfTimes)
                 spell.TryMoveIntoCastRange(spellId, nearestEnemyCellId)
 
                 -- Again check range and try casting
-                if spell.IsTargetInRange(spellId, nearestEnemyCellId) then
+                if spell.IsCastableAtTargetCell(spellId, nearestEnemyCellId) then
                     spell.TryCastingAtCellId(spellId, myCellId, nearestEnemyCellId)
                 end
             end
