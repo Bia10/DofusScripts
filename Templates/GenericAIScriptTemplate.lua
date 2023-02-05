@@ -4,6 +4,28 @@ function move()
     return {}
 end
 
+-- example of input data
+local attackersCellsExample = {
+    { cellId = 0, entityId = 0 }
+}
+
+-- Main function managing pre-fight placement of attackers and defenders
+function prefightManagement(attackersCells, defendersCells)
+
+    global:printSuccess("Scanning placement of attackers: ")
+    for cellId, entityId in pairs(attackersCells) do
+        global:printMessage("CellId: " .. cellId .. " EntityId: " .. entityId)
+    end
+
+    global:printMessage("Scanning placement of defenders: ")
+    for cellId, entityId in pairs(defendersCells) do
+        global:printMessage("CellId: " .. cellId .. " EntityId: " .. entityId)
+    end
+
+    -- TODO: cell selection logic
+    -- fightAction:chooseCell(chosenCellId)
+end
+
 -- Main function managing the AI of character wich executes the script
 function fightManagement()
     -- Check if i am at turn so logic runs only for my char

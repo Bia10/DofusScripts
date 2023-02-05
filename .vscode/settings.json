@@ -1,0 +1,20 @@
+{
+    "Lua.diagnostics.globals": [
+        "global",
+        "map",
+        "config",
+        "fightAction",
+        "fightCharacter",
+        "move",
+        "bank",
+        "phenix",
+        "stopped",
+        "fightManagement",
+        "prefightManagement"
+    ],
+
+    "Lua.format.defaultConfig": {
+        "indent_style":"space",
+        "indent_size":"2"
+    }
+}

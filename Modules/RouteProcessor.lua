@@ -2,7 +2,7 @@ local fightEngine = require("Modules.FightEngine")
 
 local routeProcessor = {}
 
-routeProcessor.Nodes = {}
+routeProcessor.RouteNodes = {}
 routeProcessor.RouteData = {
     -- replacementNode as table of move options
     { mapNode = "212601864", replacementNode = { "left", "top" } },
@@ -25,14 +25,14 @@ function routeProcessor.takeRandomBreak()
 end
 
 -- Example of execution
--- routeProcessor:Run(routeProcessor.RouteData)
+-- routeProcessor:Run(routeProcessor.RouteData, true, false)
 
 -- Runs a custom route data processor wich ultimately outputs only basic move data to move() of main script
-function routeProcessor:Run(routeDataTable)
+function routeProcessor:Run(routeDataTable, fightOnMaps, gatherOnMaps)
     local currentMapPos = map.currentPos()
     local currentMapId = tostring(map.currentMapId())
-
     local routeDataTableRow = nil
+
     for _, value in pairs(routeDataTable) do
         if value.mapNode == currentMapPos or value.mapNode == currentMapId then
             routeDataTableRow = value
@@ -50,50 +50,64 @@ function routeProcessor:Run(routeDataTable)
     -- ReplacementNodes processing wich can be a table or function type
     if routeDataTableRow.replacementNode then
         if (type(routeDataTableRow.replacementNode) == "table") then
-            if self.Nodes[currentMapId] then
-                self.Nodes[currentMapId] = self.Nodes[currentMapId] + 1
-            else
-                self.Nodes[currentMapId] = 1
+            -- locate my routeNode, is key currentMapId in the set of route nodes?
+            if self.RouteNodes[currentMapId] then
+                -- change position of my routeNode to next node
+                self.RouteNodes[currentMapId] = self.NextRouteNode[currentMapId]
+            else -- change position of my routeNode to start
+                self.RouteNodes[currentMapId] = 1
             end
 
-            if self.Nodes[currentMapId] > #routeDataTableRow.replacementNode then
-                self.Nodes[currentMapId] = 1
+            -- is current node value outside lenght of replacementNodes
+            if self.RouteNodes[currentMapId] > #routeDataTableRow.replacementNode then
+                -- put node of my mapId to start
+                self.RouteNodes[currentMapId] = 1
             end
 
-            local newNode = routeDataTableRow.replacementNode[self.Nodes[currentMapId]]
+            -- select new replacementNode at position of my routeNode
+            local currentRouteNode = self.RouteNodes[currentMapId]
+            local newReplacementNode = routeDataTableRow.replacementNode[currentRouteNode]
 
-            if (type(newNode) == "function") then
+            -- if its a function type, change node type at routeNode position
+            if (type(newReplacementNode) == "function") then
                 routeDataTableRow.replacementNode = nil
-                routeDataTableRow.customFunctionNode = newNode
+                routeDataTableRow.customFunctionNode = newReplacementNode
             else
-                routeDataTableRow.replacementNode = newNode
+                routeDataTableRow.replacementNode = newReplacementNode
             end
         end
     end
+
+    -- Begin assembling normal move() data
+    local normalMoveData
+    normalMoveData.map = routeDataTableRow.mapNode
+    normalMoveData.path = routeDataTableRow.replacementNode
 
     -- FightNodes processing which are boolean type
     if (routeDataTableRow.fightNode) then
         if (type(routeDataTableRow.fightNode) == "boolean" and routeDataTableRow.fightNode == true) then
-            -- TODO: custom logic
-            fightEngine.setForbiddenMonsters(fightEngine.suggestForbiddenMonsters)
-            fightEngine.setRequiredMonsters(fightEngine.suggestRequiredMonsters)
-            -- fight will take into consideration the global script paramters!
-            map:fight()
+            if (fightOnMaps == true) then
+                -- TODO: custom logic
+                fightEngine.setForbiddenMonsters(fightEngine.suggestForbiddenMonsters)
+                fightEngine.setRequiredMonsters(fightEngine.suggestRequiredMonsters)
+                -- Fight will take into consideration the global script params!
+                map:fight()
+            elseif (fightOnMaps == false) then
+                normalMoveData.fight = routeDataTableRow.fightNode
+            end
         end
     end
-
-    local normalMoveData
 
     -- FightNodes processing which are boolean type
     if (routeDataTableRow.gatherNode) then
         if (type(routeDataTableRow.gatherNode) == "boolean" and routeDataTableRow.gatherNode == true) then
-            -- TODO: custom logic
-            normalMoveData.gather = routeDataTableRow.gatherNode
+            if (gatherOnMaps == true) then
+                -- TODO: custom logic
+            elseif (gatherOnMaps == false) then
+                normalMoveData.gather = routeDataTableRow.gatherNode
+            end
         end
     end
-
-    normalMoveData.map = routeDataTableRow.mapNode
-    normalMoveData.path = routeDataTableRow.replacementNode
 
     global.printMessage("[RouteProcessor] Generating move() data, map: " ..
         normalMoveData.map .. " path: " .. normalMoveData.path .. " gather: " .. normalMoveData.gather)
@@ -102,8 +116,16 @@ function routeProcessor:Run(routeDataTable)
     return { normalMoveData }
 end
 
-function routeProcessor:ResetNodes()
-    self.Nodes = {}
+function routeProcessor:ResetRouteNodes()
+    self.RouteNodes = {}
+end
+
+function routeProcessor:NextRouteNode(nodeIndex)
+    return self.RouteNodes[nodeIndex] + 1
+end
+
+function routeProcessor:PrevRouteNode(nodeIndex)
+    return self.RouteNodes[nodeIndex] - 1
 end
 
 function routeProcessor.noneRouteDataTableRow()
