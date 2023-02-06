@@ -42,7 +42,7 @@ end
 
 function characterEquipment.GetSlotNameFromType(itemGid)
     if inventory:itemTypeId(itemGid) == characterEquipment.ItemType.BELT then
-        for key, value in pairs(characterEquipment.Slots) do
+        for key, _ in pairs(characterEquipment.Slots) do
             if characterEquipment.Slots[key].SlotIndex == 3 then
                 return characterEquipment.Slots[key].SlotNameEn
             end

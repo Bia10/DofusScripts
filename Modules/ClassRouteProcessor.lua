@@ -100,7 +100,7 @@ function classRouteProcessor:ProcessLocationInfo(gatherOnMaps, fightOnMaps, trav
         " gather: " .. reusltMoveData.gather .. "fight: " .. reusltMoveData.fight)
 
     -- Now we done what we wanted time to return basic data back to move() function
-    return
+    return reusltMoveData
 end
 
 function classRouteProcessor:ProcessCharacterInfo(currentCharLevel)

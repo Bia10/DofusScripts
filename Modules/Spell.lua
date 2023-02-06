@@ -32,8 +32,8 @@ spell.CastOnCellState = {
     OUT_OF_RANGE = 16
 }
 
-function spell.GetIdByName(spellName, localization)
-    for _, value in pairs(spell.Data) do
+function spell:GetIdByName(spellName, localization)
+    for _, value in pairs(self.Data) do
         if localization == "Fr" and value.NameFr == spellName then
             return value.Id
         elseif localization == "En" and value.NameEn == spellName then
@@ -42,8 +42,8 @@ function spell.GetIdByName(spellName, localization)
     end
 end
 
-function spell.GetSpellParam(spellId, param)
-    for _, value in pairs(spell.Data) do
+function spell:GetSpellParam(spellId, param)
+    for _, value in pairs(self.Data) do
         if value.Id == spellId then
             if param == "ApCost" then
                 return value.ApCost
@@ -64,18 +64,18 @@ function spell.GetSpellParam(spellId, param)
     end
 end
 
-function spell.CastOnCellStateToString(curCastOnCellState)
-    return utils.switch(spell.CastOnCellState, curCastOnCellState)
+function spell:CastOnCellStateToString(curCastOnCellState)
+    return utils.switch(self.CastOnCellState, curCastOnCellState)
 end
 
-function spell.CanCastThisTurn(spellId)
-    local spellRecastTime = spell.GetSpellParam(spellId, "RecastTime")
+function spell:CanCastThisTurn(spellId)
+    local spellRecastTime = self:GetSpellParam(spellId, "RecastTime")
     -- TODO: is castable at first turn?
     return fightEngine.IsFirstTurn() or fightAction:getCurrentTurn() % spellRecastTime == 0
 end
 
-function spell.HasApToCast(spellId, numberOfTimes)
-    local spellApCost = spell.GetApCost(spellId)
+function spell:HasApToCast(spellId, numberOfTimes)
+    local spellApCost = self:GetApCost(spellId)
     if numberOfTimes == 1 then
         return fightCharacter:getAP() >= spellApCost
     elseif numberOfTimes > 1 then
@@ -85,8 +85,8 @@ end
 
 -- TODO: rename ro IsTargetCellWithinRangeInterval
 -- TODO: use spell DefaultRangeMin, DefaultRangeMax
-function spell.IsTargetCellInRange(spellId, myCellId, targetCellId)
-    local spellDefaultRange = spell.GetSpellParam(spellId, "DefaultRange")
+function spell:IsTargetCellInRange(spellId, myCellId, targetCellId)
+    local spellDefaultRange = self:GetSpellParam(spellId, "DefaultRange")
     local characterRangeBonus = fightCharacter:getRange()
 
     -- TODO: we assume that spell range is modyfiable, we asume reuirement for line of sight
@@ -97,24 +97,24 @@ function spell.IsTargetCellInRange(spellId, myCellId, targetCellId)
     end
 end
 
-function spell.IsTargetCellInLineOfSight(myCellId, targetCellId)
+function spell:IsTargetCellInLineOfSight(myCellId, targetCellId)
     return fightAction:inLineOfSight(myCellId, targetCellId) == true
 end
 
-function spell.IsTargetCellOccupied(targetCellId)
+function spell:IsTargetCellOccupied(targetCellId)
     return fightAction:isFreeCell(targetCellId) == false
 end
 
-function spell.IsCastable(spellId, numberOfTimes)
+function spell:IsCastable(spellId, numberOfTimes)
 
-    return spell.HasApToCast(spellId, numberOfTimes) == true and spell.CanCastThisTurn(spellId) == true
+    return self:HasApToCast(spellId, numberOfTimes) == true and self:CanCastThisTurn(spellId) == true
 end
 
-function spell.GetCastRequirements(spellId)
+function spell:GetCastRequirements(spellId)
     local spellCastRequirements = { SpellId = spellId, Requirements = {} }
-    local isLineOfSightRequired = spell.GetSpellParam(spellId, "LosRequired")
-    local isTargetRequired = spell.GetSpellParam(spellId, "TargetRequired")
-    local isEmptyCellRequired = spell.GetSpellParam(spellId, "EmptyCellRequired")
+    local isLineOfSightRequired = self:GetSpellParam(spellId, "LosRequired")
+    local isTargetRequired = self:GetSpellParam(spellId, "TargetRequired")
+    local isEmptyCellRequired = self:GetSpellParam(spellId, "EmptyCellRequired")
 
     if isLineOfSightRequired == true then
         spellCastRequirements.Requirements.insert("LosRequired")
@@ -127,14 +127,14 @@ function spell.GetCastRequirements(spellId)
     return spellCastRequirements
 end
 
-function spell.IsCastableAtTargetCell(spellId, numberOfTimes, spellLaunchCellId, targetCellId)
+function spell:IsCastableAtTargetCell(spellId, numberOfTimes, spellLaunchCellId, targetCellId)
     spellLaunchCellId = fightCharacter:getCellId();
 
-    if spell.IsCastable(spellId, numberOfTimes) == false then
+    if self:IsCastable(spellId, numberOfTimes) == false then
         return false
-    elseif spell.IsTargetCellInRange(spellId, spellLaunchCellId, targetCellId) == false then
+    elseif self:IsTargetCellInRange(spellId, spellLaunchCellId, targetCellId) == false then
         return false
-    elseif spell.ValidateAgainstRequirements(spellId, spellLaunchCellId, targetCellId) == false then
+    elseif self:ValidateAgainstRequirements(spellId, spellLaunchCellId, targetCellId) == false then
         return false
     end
 
@@ -147,34 +147,34 @@ function spell.IsCastableAtTargetCell(spellId, numberOfTimes, spellLaunchCellId,
     return true
 end
 
-function spell.ValidateAgainstRequirements(spellId, spellLaunchCellId, targetCellId)
-    local spellCastRequirements = spell.GetCastRequirements(spellId)
+function spell:ValidateAgainstRequirements(spellId, spellLaunchCellId, targetCellId)
+    local spellCastRequirements = self:GetCastRequirements(spellId)
 
     for _, value in pairs(spellCastRequirements.Requirements) do
         if #value.Requirements > 0 then
             for _, requirementName in pairs(value.Requirements) do
                 if requirementName == "LosRequired" then
-                    return spell.IsTargetCellInLineOfSight(spellLaunchCellId, targetCellId) == true
+                    return self:IsTargetCellInLineOfSight(spellLaunchCellId, targetCellId) == true
                 elseif requirementName == "TargetRequired" then
-                    return spell.IsTargetCellOccupied(targetCellId) == true
+                    return self:IsTargetCellOccupied(targetCellId) == true
                 elseif requirementName == "EmptyCellRequired" then
-                    return spell.IsTargetCellOccupied(targetCellId) == false
+                    return self:IsTargetCellOccupied(targetCellId) == false
                 end
             end
         end
     end
 end
 
-function spell.TryMoveIntoCastRange(spellId, targetCellId, onFailMoveTowardsTarget)
+function spell:TryMoveIntoCastRange(spellId, targetCellId, onFailMoveTowardsTarget)
     local reachableCellsIds = fightAction:getReachableCells()
-    local maxCastsPerTurnPerTarget = spell.GetSpellParam(spellId, "CastsPerTurnPerTarget")
+    local maxCastsPerTurnPerTarget = self:GetSpellParam(spellId, "CastsPerTurnPerTarget")
 
     if #reachableCellsIds < 1 or maxCastsPerTurnPerTarget < 1 then
         return
     end
 
     for _, reachableCellsId in pairs(reachableCellsIds) do
-        if spell.IsCastableAtTargetCell(spellId, maxCastsPerTurnPerTarget, reachableCellsId, targetCellId) then
+        if self:IsCastableAtTargetCell(spellId, maxCastsPerTurnPerTarget, reachableCellsId, targetCellId) then
             global:printMessage("[SPELL] found rechable cell: " ..
                 reachableCellsId .. " where target cell: " .. targetCellId .. " can be attacked moving towards it.")
             fightAction:moveToWardCell(reachableCellsId)
@@ -189,14 +189,14 @@ function spell.TryMoveIntoCastRange(spellId, targetCellId, onFailMoveTowardsTarg
     end
 end
 
-function spell.TryCastingAtTargetCell(spellId, myCellId, targetCellId)
-    -- Verification if we can cast spell on given cellId, result is a enum defined in spell.CastOnCellState
+function spell:TryCastingAtTargetCell(spellId, myCellId, targetCellId)
+    -- Verification if we can cast spell on given cellId, result is a enum defined in self:CastOnCellState
     local spellCastOnCellState = fightAction:canCastSpellOnCell(myCellId, spellId, targetCellId)
     -- Convert reason int value to string
-    local spellCastOnCellStateStr = spell.CastOnCellStateToString(spellCastOnCellState)
+    local spellCastOnCellStateStr = self:CastOnCellStateToString(spellCastOnCellState)
 
     -- Its not possble to cast given spellId at given cellId for a reason
-    if spellCastOnCellState ~= spell.CastOnCellState.CASTING_POSSIBLE then
+    if spellCastOnCellState ~= self.CastOnCellState.CASTING_POSSIBLE then
         global:printError("Its not possible to cast spellId: " ..
             spellId .. " on cellId: " .. targetCellId .. " reason: " .. spellCastOnCellStateStr)
         ---------------------------------------------

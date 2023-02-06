@@ -9,52 +9,52 @@ fightObserver.EntitiesContext = {}
 fightObserver.GenericContext = {}
 fightObserver.FightContext = {}
 
-function fightObserver.LoadFightContext()
-    fightObserver.LoadEntitiesContext()
-    fightObserver.LoadGenericContext()
+function fightObserver:LoadFightContext()
+    self:LoadEntitiesContext()
+    self:LoadGenericContext()
 
-    fightObserver.FightContext = {
-        fightObserver.GenericContext,
-        fightObserver.EntitiesContext,
+    self.FightContext = {
+        self.GenericContext,
+        self.EntitiesContext,
     }
 end
 
-function fightObserver.LoadEntitiesContext()
-    fightObserver.FightEntitiesList = fightEngine.GetFightEntities()
+function fightObserver:LoadEntitiesContext()
+    self.FightEntitiesList = fightEngine.GetFightEntities()
 
-    for key, _ in pairs(fightObserver.FightEntitiesList) do
-        local currentEntity = fightObserver.FightEntitiesList[key]
+    for key, _ in pairs(self.FightEntitiesList) do
+        local currentEntity = self.FightEntitiesList[key]
 
         if currentEntity.Team == true then
-            fightObserver.EnemyFightEntitiesList.insert(currentEntity)
+            self.EnemyFightEntitiesList.insert(currentEntity)
         elseif currentEntity.Team == false then
-            fightObserver.AllyFightEntitiesList.insert(currentEntity)
+            self.AllyFightEntitiesList.insert(currentEntity)
         end
     end
 
-    fightObserver.EntitiesContext = { {
-        FightEntities = fightObserver.FightEntitiesList,
-        AllyFightEntities = fightObserver.AllyFightEntitiesList,
-        EnemyFightEntities = fightObserver.EnemyFightEntitiesList,
+    self.EntitiesContext = { {
+        FightEntities = self.FightEntitiesList,
+        AllyFightEntities = self.AllyFightEntitiesList,
+        EnemyFightEntities = self.EnemyFightEntitiesList,
     } }
 end
 
-function fightObserver.LoadGenericContext()
-    fightObserver.GenericContext = { {
+function fightObserver:LoadGenericContext()
+    self.GenericContext = { {
         CurrentTurnNumber = fightAction:getCurrentTurn(),
         CurrentFightCount = global:getCountFight(),
-        TotalEntitiesCount = #fightObserver.FightEntitiesList,
-        EnemyEntitiesCount = #fightObserver.EnemyFightEntitiesList,
-        AllyEntitiesCount = #fightObserver.AllyFightEntitiesList,
+        TotalEntitiesCount = #self.FightEntitiesList,
+        EnemyEntitiesCount = #self.EnemyFightEntitiesList,
+        AllyEntitiesCount = #self.AllyFightEntitiesList,
     } }
 end
 
-function fightObserver.GetAttackersCells()
+function fightObserver:GetAttackersCells()
     local attackerCells = {}
 
     -- assuming i am attacking and not being agroed
-    for key, _ in pairs(fightObserver.AllyFightEntitiesList) do
-        local currentAllyEntity = fightObserver.AllyFightEntitiesList[key]
+    for key, _ in pairs(self.AllyFightEntitiesList) do
+        local currentAllyEntity = self.AllyFightEntitiesList[key]
 
         attackerCells.insert(currentAllyEntity.CellId, currentAllyEntity.Id)
     end
@@ -62,11 +62,11 @@ function fightObserver.GetAttackersCells()
     return attackerCells
 end
 
-function fightObserver.GetDefendersCells()
+function fightObserver:GetDefendersCells()
     local defenderCells = {}
 
-    for key, _ in pairs(fightObserver.EnemyFightEntitiesList) do
-        local currentEnemyEntity = fightObserver.EnemyFightEntitiesList[key]
+    for key, _ in pairs(self.EnemyFightEntitiesList) do
+        local currentEnemyEntity = self.EnemyFightEntitiesList[key]
 
         defenderCells.insert(currentEnemyEntity.CellId, currentEnemyEntity.Id)
     end
@@ -74,11 +74,11 @@ function fightObserver.GetDefendersCells()
     return defenderCells
 end
 
-function fightObserver.GetEnemiesWeakToElementType(elementType)
+function fightObserver:GetEnemiesWeakToElementType(elementType)
     local enemyResistances = {}
 
-    for key, _ in pairs(fightObserver.EnemyFightEntitiesList) do
-        local currentEnemyEntity = fightObserver.EnemyFightEntitiesList[key]
+    for key, _ in pairs(self.EnemyFightEntitiesList) do
+        local currentEnemyEntity = self.EnemyFightEntitiesList[key]
 
         enemyResistances = { {
             EnemyEntityId = currentEnemyEntity.Id, CellId = currentEnemyEntity.CellId,
@@ -99,7 +99,8 @@ function fightObserver.GetEnemiesWeakToElementType(elementType)
     elseif elementType == "Air" then
         table.sort(enemyResistances, function(a, b) return a.ResistanceAirPercentage < b.ResistanceAirPercentage end)
     elseif elementType == "Neutral" then
-        table.sort(enemyResistances, function(a, b) return a.ResistanceNeaturalPercentage < b.ResistanceNeaturalPercentage end)
+        table.sort(enemyResistances,
+            function(a, b) return a.ResistanceNeaturalPercentage < b.ResistanceNeaturalPercentage end)
     end
 
     return enemyResistances
