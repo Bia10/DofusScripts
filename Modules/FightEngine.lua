@@ -31,15 +31,15 @@ function fightEngine.GetFightEntities()
 end
 
 function fightEngine.IsFightStart()
-    return global:isInFight() == true and fightAction:getCurrentTurn() == 0
+    return global:isInFight() and fightAction:getCurrentTurn() == 0
 end
 
 function fightEngine.IsFirstTurn()
-    return global:isInFight() == true and fightAction:getCurrentTurn() == 1
+    return global:isInFight() and fightAction:getCurrentTurn() == 1
 end
 
 function fightEngine.IsInCombat()
-    return global:afterFight() == false and global:isInFight() == true and fightAction:getCurrentTurn() >= 0
+    return not global:afterFight() and global:isInFight() and fightAction:getCurrentTurn() >= 0
 end
 
 function fightEngine.setpecificMonsterGroups(monsterIds, mins, maxs)

@@ -30,7 +30,7 @@ function characterClass.SelectAndExecuteFightStrategy(selectByMainElement)
     local mainStat = characterStats.GetHighestStat()
 
     if characterClassId == 1 then
-        if selectByMainElement == true then
+        if selectByMainElement then
             if mainStat == "Inteligence" then
                 -- return fecaBasicFireStrategy.Execute()
             elseif mainStat == "Strength" then
@@ -42,7 +42,7 @@ function characterClass.SelectAndExecuteFightStrategy(selectByMainElement)
             end
         end
     elseif characterClassId == 2 then
-        if selectByMainElement == true then
+        if selectByMainElement then
             if mainStat == "Inteligence" then
                 -- return osamodasBasicFireStrategy.Execute()
             elseif mainStat == "Strength" then
@@ -56,7 +56,7 @@ function characterClass.SelectAndExecuteFightStrategy(selectByMainElement)
             end
         end
     elseif characterClassId == 3 then
-        if selectByMainElement == true then
+        if selectByMainElement then
             if mainStat == "Inteligence" then
                 -- return enutrofBasicFireStrategy.Execute()
             elseif mainStat == "Strength" then

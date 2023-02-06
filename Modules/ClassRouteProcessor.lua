@@ -25,7 +25,7 @@ function classRouteProcessor:ProcessLocationInfo(gatherOnMaps, fightOnMaps, trav
         end
     end
 
-    -- Starting mapNode is nill we cannot continue
+    -- Starting mapNode is nill or false we cannot continue
     if not currentMapNode then
         global.printMessage("[RouteProcessor] None mapNode found for mapPos: " ..
             currentMapPos .. " (" .. currentMapId .. ").")
@@ -38,22 +38,25 @@ function classRouteProcessor:ProcessLocationInfo(gatherOnMaps, fightOnMaps, trav
 
     -- GatherNodes processing which are boolean type
     if currentMapNode.GatherNode and type(currentMapNode.GatherNode) == "boolean" then
-        if gatherOnMaps == true then
+        if gatherOnMaps then
             -- TODO: custom logic
-        elseif gatherOnMaps == false then
+        elseif not gatherOnMaps then
             reusltMoveData.gather = false
         end
     end
 
     -- FightNodes processing which are boolean type
     if currentMapNode.FightNode and type(currentMapNode.FightNode) == "boolean" then
-        if fightOnMaps == true and global:maximumNumberFightsOfDay() == false then
+        if fightOnMaps and not global:maximumNumberFightsOfDay() then
             -- TODO: custom logic
-            fightEngine.setForbiddenMonsters(fightEngine.suggestForbiddenMonsters())
-            fightEngine.setRequiredMonsters(fightEngine.suggestRequiredMonsters())
+            local suggestedForbiddenMobs = fightEngine.suggestForbiddenMonsters()
+            local suggestedRequiredMobs = fightEngine.suggestRequiredMonsters()
+
+            fightEngine.setForbiddenMonsters(suggestedForbiddenMobs)
+            fightEngine.setRequiredMonsters(suggestedRequiredMobs)
             -- Fight will take into consideration the global script params!
             map:fight()
-        elseif fightOnMaps == false then
+        elseif not fightOnMaps then
             reusltMoveData.fight = false
         end
     end
@@ -138,7 +141,7 @@ function classRouteProcessor:SelectSuitableTraningNode(classRoute, currentCharLe
     elseif trainingNodeCount > 1 then
         for i = 1, trainingNodeCount, 1 do
             local currentTrainingNode = classRoute.TraningNode[i]
-            if TraningRouteRequirementsMet(currentTrainingNode.GeneralInfo, currentCharLevel) == false then
+            if not ValidaceTraningNodeRequirements(currentTrainingNode, currentCharLevel) then
                 classRoute.remove(currentTrainingNode)
             end
         end
@@ -151,7 +154,9 @@ function classRouteProcessor:SelectSuitableTraningNode(classRoute, currentCharLe
     self.CurrentTraningNode = classRoute.TraningNode
 end
 
-function TraningRouteRequirementsMet(routeGeneralInfo, currentCharLevel)
+function ValidaceTraningNodeRequirements(currentTrainingNode, currentCharLevel)
+    local routeGeneralInfo = currentTrainingNode.GeneralInfo
+
     -- level range validation
     if currentCharLevel < routeGeneralInfo.MinimumLevel or currentCharLevel > routeGeneralInfo.MaximumLevel then
         return false
@@ -168,7 +173,7 @@ function classRouteProcessor:Run(classRoute, gatherOnMaps, fightOnMaps, traverse
 
     self:SelectSuitableTraningNode(classRoute, currentCharLevel)
 
-    if self.CurrentTraningNode ~= nil then
+    if self.CurrentTraningNode then
         self:ProcessCharacterInfo(currentCharLevel)
         self:ProcessLocationInfo(gatherOnMaps, fightOnMaps, traverseMaps)
     end

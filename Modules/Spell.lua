@@ -98,16 +98,16 @@ function spell:IsTargetCellInRange(spellId, myCellId, targetCellId)
 end
 
 function spell:IsTargetCellInLineOfSight(myCellId, targetCellId)
-    return fightAction:inLineOfSight(myCellId, targetCellId) == true
+    return fightAction:inLineOfSight(myCellId, targetCellId)
 end
 
 function spell:IsTargetCellOccupied(targetCellId)
-    return fightAction:isFreeCell(targetCellId) == false
+    return not fightAction:isFreeCell(targetCellId)
 end
 
 function spell:IsCastable(spellId, numberOfTimes)
 
-    return self:HasApToCast(spellId, numberOfTimes) == true and self:CanCastThisTurn(spellId) == true
+    return self:HasApToCast(spellId, numberOfTimes) and self:CanCastThisTurn(spellId)
 end
 
 function spell:GetCastRequirements(spellId)
@@ -116,11 +116,11 @@ function spell:GetCastRequirements(spellId)
     local isTargetRequired = self:GetSpellParam(spellId, "TargetRequired")
     local isEmptyCellRequired = self:GetSpellParam(spellId, "EmptyCellRequired")
 
-    if isLineOfSightRequired == true then
+    if isLineOfSightRequired then
         spellCastRequirements.Requirements.insert("LosRequired")
-    elseif isTargetRequired == true then
+    elseif isTargetRequired then
         spellCastRequirements.Requirements.insert("TargetRequired")
-    elseif isEmptyCellRequired == true then
+    elseif isEmptyCellRequired then
         spellCastRequirements.Requirements.insert("EmptyCellRequired")
     end
 
@@ -130,11 +130,11 @@ end
 function spell:IsCastableAtTargetCell(spellId, numberOfTimes, spellLaunchCellId, targetCellId)
     spellLaunchCellId = fightCharacter:getCellId();
 
-    if self:IsCastable(spellId, numberOfTimes) == false then
+    if not self:IsCastable(spellId, numberOfTimes) then
         return false
-    elseif self:IsTargetCellInRange(spellId, spellLaunchCellId, targetCellId) == false then
+    elseif not self:IsTargetCellInRange(spellId, spellLaunchCellId, targetCellId) then
         return false
-    elseif self:ValidateAgainstRequirements(spellId, spellLaunchCellId, targetCellId) == false then
+    elseif not self:ValidateAgainstRequirements(spellId, spellLaunchCellId, targetCellId) then
         return false
     end
 
@@ -154,11 +154,11 @@ function spell:ValidateAgainstRequirements(spellId, spellLaunchCellId, targetCel
         if #value.Requirements > 0 then
             for _, requirementName in pairs(value.Requirements) do
                 if requirementName == "LosRequired" then
-                    return self:IsTargetCellInLineOfSight(spellLaunchCellId, targetCellId) == true
+                    return self:IsTargetCellInLineOfSight(spellLaunchCellId, targetCellId)
                 elseif requirementName == "TargetRequired" then
-                    return self:IsTargetCellOccupied(targetCellId) == true
+                    return self:IsTargetCellOccupied(targetCellId)
                 elseif requirementName == "EmptyCellRequired" then
-                    return self:IsTargetCellOccupied(targetCellId) == false
+                    return not self:IsTargetCellOccupied(targetCellId)
                 end
             end
         end
@@ -184,7 +184,7 @@ function spell:TryMoveIntoCastRange(spellId, targetCellId, onFailMoveTowardsTarg
 
     global:printMessage("[SPELL] failed to find a rechable cell where target cell: " ..
         targetCellId .. " can be attacked.")
-    if onFailMoveTowardsTarget == true then
+    if onFailMoveTowardsTarget then
         fightAction:moveToWardCell(targetCellId)
     end
 end

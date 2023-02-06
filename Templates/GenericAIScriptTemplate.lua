@@ -52,7 +52,7 @@ end
 -- Main function managing the AI of character wich executes the script
 function fightManagement()
     -- Check if i am at turn so logic runs only for my char
-    if fightCharacter:isItMyTurn() == true then
+    if fightCharacter:isItMyTurn() then
         --------------------------------------------
         -- Before doing actions check positioning --
         --------------------------------------------

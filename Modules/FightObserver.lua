@@ -25,9 +25,9 @@ function fightObserver:LoadEntitiesContext()
     for key, _ in pairs(self.FightEntitiesList) do
         local currentEntity = self.FightEntitiesList[key]
 
-        if currentEntity.Team == true then
+        if currentEntity.Team then
             self.EnemyFightEntitiesList.insert(currentEntity)
-        elseif currentEntity.Team == false then
+        elseif not currentEntity.Team then
             self.AllyFightEntitiesList.insert(currentEntity)
         end
     end
