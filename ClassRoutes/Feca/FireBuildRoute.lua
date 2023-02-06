@@ -16,12 +16,14 @@ fireBuildRoute.TraningNodeLevel_0_10 = {
 
 fireBuildRoute.TraningNodeLevel_0_10.GeneralInfo = {
     MinimumLevel = 0, MaximumLevel = 10,
-    MinimumGroupSize = 0, MinimumGroupTotalLevel = 0,
+    MinimumGroupSize = 0, MaximumGroupSize = 0,
+    MinimumGroupTotalLevel = 0, MaximumGroupTotalLevel = 0,
     CanTrainSolo = true
 }
 
 fireBuildRoute.TraningNodeLevel_0_10.LocationInfo = {
-    Area = "Incarnam", SubArea = "Incarnam", TraversalMode = "Random",
+    Area = "Incarnam", SubArea = "Incarnam",
+    TraversalMode = "Random", SyncGroupTraversal = false,
     MapNodes = {
         { MapIdNode = 99999, FightNode = true, MoveNode = "top", },
         { MapIdNode = 99999, FightNode = true, MoveNode = "top" },

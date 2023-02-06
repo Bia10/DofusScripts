@@ -51,7 +51,7 @@ function characterStats.CanUpgrade(statType, pointsToInvest)
     return true
 end
 
-function characterStats.UpgradeStat(statType, pointsToInvest)
+function characterStats.Upgrade(statType, pointsToInvest)
     if characterStats.CanUpgrade(statType, pointsToInvest) then
         if statType == "Inteligence" then
             character:upgradeIntelligence(pointsToInvest)

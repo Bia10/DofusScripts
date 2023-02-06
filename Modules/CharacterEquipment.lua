@@ -70,10 +70,13 @@ function characterEquipment.EquipIntoSlot(itemGid, equpmentSlotName)
         itemGid .. " into slot: " .. equpmentSlotName)
 end
 
-function characterEquipment.EquipMultipleItems(itemsDict)
-    for key, _ in pairs(itemsDict) do
-        if characterEquipment.CanEquip(itemsDict[key].ItemGid, itemsDict[key].SlotName) then
-            characterEquipment.EquipIntoSlot(itemsDict[key].ItemGid, itemsDict[key].SlotName)
+function characterEquipment.EquipMultipleItems(listOfitemsGid)
+    for i = 1, #listOfitemsGid, 1 do
+        local curItemGid = listOfitemsGid[i].ItemGid
+        local curItemslotName = characterEquipment.GetSlotNameFromType(curItemGid)
+
+        if characterEquipment.CanEquip(curItemGid, curItemslotName) then
+            characterEquipment.EquipIntoSlot(curItemGid, curItemslotName)
         end
     end
 end
