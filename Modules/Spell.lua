@@ -1,5 +1,6 @@
 local utils = require("Modules.Utils")
 local fightEngine = require("Modules.FightEngine")
+local spellCastResult = require("Enum.SpellCastResult")
 
 local spell = {}
 
@@ -10,26 +11,6 @@ spell.Data = {
         TargetRequired = true, RecastTime = 1, CastsPerTurnPerTarget = 3 },
     { Id = 7535, NameFr = "Sac Animé", NameEn = "Living Bag", ApCost = 2, DefaultRange = 1, LosRequired = false,
         TargetRequired = false, EmptyCellRequired = true, RecastTime = 4 },
-}
-
-spell.CastOnCellState = {
-    CASTING_POSSIBLE = 0,
-    LIMIT_OF_CASTS_PER_TURN_REACHED = 1,
-    SPELL_ON_COOLDOWN = 2,
-    INSUFICIENT_ACTION_POINTS = 3,
-    LIMIT_OF_CAST_PER_TARGET_REACHED = 4,
-    TARGET_TOO_FAR = 5,
-    TARGET_TOO_CLOSE = 6,
-    MUST_BE_CAST_IN_LINE = 7,
-    TARGET_OUTSIDE_LINE_OF_SIGHT = 8,
-    LIMIT_OF_SUMMONS_REACHED = 9,
-    TARGET_CELL_IS_OCCUPIED = 10,
-    TARGET_CELL_IS_EMPTY = 11,
-    STATE_EFFECT_REQUIRED = 12,
-    STATE_EFFECT_FORBIDDEN = 13,
-    MUST_BE_CAST_IN_DIAGONAL = 14,
-    UNKNOWN = 15,
-    OUT_OF_RANGE = 16
 }
 
 function spell:GetIdByName(spellName, localization)
@@ -208,7 +189,7 @@ function spell:TryCastingAtTargetCell(spellId, myCellId, targetCellId)
     local spellCastOnCellStateStr = self:CastOnCellStateToString(spellCastOnCellState)
 
     -- Its not possble to cast given spellId at given cellId for a reason
-    if spellCastOnCellState ~= self.CastOnCellState.CASTING_POSSIBLE then
+    if spellCastOnCellState ~= spellCastResult.CASTING_POSSIBLE then
         global:printError("Its not possible to cast spellId: " ..
             spellId .. " on cellId: " .. targetCellId .. " reason: " .. spellCastOnCellStateStr)
         ---------------------------------------------

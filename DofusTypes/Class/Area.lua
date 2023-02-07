@@ -1,5 +1,5 @@
 ----------------------
--- Area Class definition --
+-- Area class definition --
 ----------------------
 Area = {
     Id = 0,
@@ -45,14 +45,8 @@ function Area:getSize()
     return self.Bounds:getArea()
 end
 
--- Creating an object
-Area = Area:new()
-
--- Calling method
-Area:getSize()
-
 -----------------------------
--- Bounds Class definition --
+-- Bounds class definition --
 -----------------------------
 Bounds = {
     PosX = 0,
