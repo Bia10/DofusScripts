@@ -74,6 +74,14 @@ function fightObserver:GetDefendersCells()
     return defenderCells
 end
 
+function fightObserver:getEntityAtCellId(cellId)
+    for key, _ in pairs(self.FightEntitiesList) do
+        if self.FightEntitiesList[key].CellId == cellId then
+            return self.FightEntitiesList[key]
+        end
+    end
+end
+
 function fightObserver:GetEnemiesWeakToElementType(elementType)
     local enemyResistances = {}
 

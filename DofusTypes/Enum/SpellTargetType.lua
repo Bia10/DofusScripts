@@ -1,0 +1,26 @@
+-- flags actually
+local spellEntityTargetType = {
+    NONE = 0,
+    SELF = 1,
+    ALLY_MONSTER_SUMMON = 2,
+    ALLY_SUMMON = 4,
+    ALLY_NON_MONSTER_SUMMON = 8,
+    ALLY_COMPANION = 16,
+    ALLY_MONSTER = 32,
+    ALLY_SUMMONER = 64,
+    ALLY_PLAYER = 128,
+    ALLY_ALL_EXCEPT_SELF = 254,
+    ALLY_ALL = 255,
+    ENEMY_MONSTER_SUMMON = 256,
+    ENEMY_SUMMON = 512,
+    ENEMY_NON_MONSTER_SUMMON = 1024,
+    ENEMY_COMPANION = 2048,
+    ENEMY_MONSTER = 4096,
+    ENEMY_UNKN_1 = 8192,
+    ENEMY_PLAYER = 16384,
+    ENEMY_ALL = 32512,
+    ALL = 32767,
+    SELF_ONLY = 524288
+}
+
+return spellEntityTargetType

@@ -1,4 +1,6 @@
 local characterClass = require("Modules.CharacterClass")
+local spellEntityTargetType = require("DofusTypes.Enum.SpellTargetType")
+local fightEntityTeamType = require("DofusTypes.Enum.FightEntityTeamType")
 
 local fightEngine = {}
 
@@ -21,6 +23,21 @@ function fightEngine.ChoseStrartingCell(occupiedAttackerCells)
 
     -- TODO: case 2 hide supports/ranged behind tankier chars
     -- TODO: case 3 place close ranged attackers near enemy, seek glyph/aoe dmg openings
+end
+
+function fightEngine.getEntityTargetType(fightEntity)
+    if fightEntity.Mycharacter then
+        return spellEntityTargetType.SELF
+    end
+
+    -- TODO: depends who began the fight, assuming i do
+    if fightEntity.Team == fightEntityTeamType.CHALLENGER then
+        return spellEntityTargetType.ALLY_ALL
+    end
+
+    if fightEntity.Team == fightEntityTeamType.DEFENDER then
+        return spellEntityTargetType.ENEMY_ALL
+    end
 end
 
 function fightEngine.GetFightEntities()
