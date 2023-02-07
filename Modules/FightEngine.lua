@@ -1,4 +1,5 @@
 local characterClass = require("Modules.CharacterClass")
+local fightObserver = require("Modules.FightObserver")
 local spellEntityTargetType = require("DofusTypes.Enum.SpellTargetType")
 local fightEntityTeamType = require("DofusTypes.Enum.FightEntityTeamType")
 
@@ -25,17 +26,22 @@ function fightEngine.ChoseStrartingCell(occupiedAttackerCells)
     -- TODO: case 3 place close ranged attackers near enemy, seek glyph/aoe dmg openings
 end
 
-function fightEngine.getEntityTargetType(fightEntity)
-    if fightEntity.Mycharacter then
+function fightEngine.getEntityTargetType(cellId)
+    local fightEntity = fightObserver:getEntityAtCellId(cellId)
+
+    if not fightEntity then
+        return spellEntityTargetType.NONE
+    elseif fightEntity.Mycharacter then
         return spellEntityTargetType.SELF
-    end
-
-    -- TODO: depends who began the fight, assuming i do
-    if fightEntity.Team == fightEntityTeamType.CHALLENGER then
+    elseif fightEntity.Team == fightEntityTeamType.CHALLENGER then
+        if fightEntity.Stats.summoned then
+            return spellEntityTargetType.ALLY_SUMMON
+        end
         return spellEntityTargetType.ALLY_ALL
-    end
-
-    if fightEntity.Team == fightEntityTeamType.DEFENDER then
+    elseif fightEntity.Team == fightEntityTeamType.DEFENDER then
+        if fightEntity.Stats.summoned then
+            return spellEntityTargetType.ENEMY_SUMMON
+        end
         return spellEntityTargetType.ENEMY_ALL
     end
 end

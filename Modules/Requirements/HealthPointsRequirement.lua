@@ -1,6 +1,6 @@
 local healthPointsRequirement = {}
 
-function IsValid(requiredHP, comparisonType, targetEntity)
+function healthPointsRequirement.IsValid(requiredHP, comparisonType, targetEntity)
     local targetEntityCurHP = targetEntity.LifePoints
 
     if comparisonType == "Less" then
@@ -15,7 +15,7 @@ function IsValid(requiredHP, comparisonType, targetEntity)
         return targetEntityCurHP >= requiredHP
     end
 
-    global:printError("[Requirement-HP] Invalid comparison type: " ..comparisonType)
+    global:printError("[Requirement-HP] Invalid comparison type: " .. comparisonType)
     return false;
 end
 

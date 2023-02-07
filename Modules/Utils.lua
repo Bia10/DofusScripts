@@ -1,5 +1,13 @@
 local utils = {}
 
+function utils.GetArgs(func)
+    local args = {}
+    for i = 1, debug.getinfo(func).nparams, 1 do
+        table.insert(args, i, debug.getlocal(func));
+    end
+    return args;
+end
+
 function utils.IsTableEmpty(table)
     -- localize next(), implies lookup in array of locals vs lookup in hashtable of globals
     local nextFunc = next

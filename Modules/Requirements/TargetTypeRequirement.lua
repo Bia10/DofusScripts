@@ -2,7 +2,7 @@ local spellTargetType = require("DofusTypes.Enum.SpellTargetType")
 
 local targetTypeRequirement = {}
 
-function IsValid(requiredType, targetEntityType)
+function targetTypeRequirement.IsValid(requiredType, targetEntityType)
     if requiredType == spellTargetType.NONE then
         return true
     elseif requiredType == spellTargetType.SELF or spellTargetType.SELF_ONLY then

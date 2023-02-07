@@ -6,7 +6,7 @@ local spellCastResult = require("Enum.SpellCastResult")
 local spell = {}
 
 spell.Data = {
-    { Id = 0,    NameFr = "Coup de poing",    NameEn = "Punch",         ApCost = 3, DefaultRange = 1, LosRequired = false, TargetRequired = false, EmptyCellRequired = false, RecastTime = 1, CastsPerTurnPerTarget = 3 },
+    { Id = 0,    NameFr = "Coup de poing",     NameEn = "Punch",         ApCost = 3, DefaultRange = 1, LosRequired = false, TargetRequired = false, EmptyCellRequired = false, RecastTime = 1, CastsPerTurnPerTarget = 3 },
     { Id = 7533, NameFr = "Lancer de Pièces", NameEn = "Coin Throwing", ApCost = 2, DefaultRange = 8, LosRequired = true,  TargetRequired = true,  EmptyCellRequired = false, RecastTime = 1, CastsPerTurnPerTarget = 3 },
     { Id = 7535, NameFr = "Sac Animé",        NameEn = "Living Bag",    ApCost = 2, DefaultRange = 1, LosRequired = false, TargetRequired = false, EmptyCellRequired = true,  RecastTime = 4, CastsPerTurnPerTarget = 0 },
 }
@@ -100,23 +100,6 @@ function spell:IsCastable(spellId, numberOfTimes)
     return self:HasApToCast(spellId, numberOfTimes) and self:CanCastThisTurn(spellId)
 end
 
-function spell:GetCastRequirements(spellId)
-    local spellCastRequirements = { SpellId = spellId, Requirements = {} }
-    local isLineOfSightRequired = self:GetSpellParam(spellId, "LosRequired")
-    local isTargetRequired = self:GetSpellParam(spellId, "TargetRequired")
-    local isEmptyCellRequired = self:GetSpellParam(spellId, "EmptyCellRequired")
-
-    if isLineOfSightRequired then
-        spellCastRequirements.Requirements.insert("LosRequired")
-    elseif isTargetRequired then
-        spellCastRequirements.Requirements.insert("TargetRequired")
-    elseif isEmptyCellRequired then
-        spellCastRequirements.Requirements.insert("EmptyCellRequired")
-    end
-
-    return spellCastRequirements
-end
-
 function spell:IsCastableAtTargetCell(spellId, numberOfTimes, spellLaunchCellId, targetCellId)
     spellLaunchCellId = fightCharacter:getCellId();
 
@@ -135,24 +118,6 @@ function spell:IsCastableAtTargetCell(spellId, numberOfTimes, spellLaunchCellId,
     -- TODO: total ammount of summons per character requirement
 
     return true
-end
-
-function spell:ValidateAgainstRequirements(spellId, spellLaunchCellId, targetCellId)
-    local spellCastRequirements = self:GetCastRequirements(spellId)
-
-    for _, value in pairs(spellCastRequirements.Requirements) do
-        if #value.Requirements > 0 then
-            for _, requirementName in pairs(value.Requirements) do
-                if requirementName == "LosRequired" then
-                    return self:IsTargetCellInLineOfSight(spellLaunchCellId, targetCellId)
-                elseif requirementName == "TargetRequired" then
-                    return self:IsTargetCellOccupied(targetCellId)
-                elseif requirementName == "EmptyCellRequired" then
-                    return not self:IsTargetCellOccupied(targetCellId)
-                end
-            end
-        end
-    end
 end
 
 function spell:TryMoveIntoCastRange(spellId, targetCellId, onFailMoveTowardsTarget)
