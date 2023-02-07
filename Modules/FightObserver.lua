@@ -5,18 +5,49 @@ local fightObserver = {}
 fightObserver.FightEntitiesList = {}
 fightObserver.AllyFightEntitiesList = {}
 fightObserver.EnemyFightEntitiesList = {}
-fightObserver.EntitiesContext = {}
-fightObserver.GenericContext = {}
-fightObserver.FightContext = {}
+
+fightObserver.GenericContext = {
+    CurrentTurnNumber = 0,
+    CurrentFightCount = 0,
+    TotalEntitiesCount = 0,
+    AllyEntitiesCount = 0,
+    EnemyEntitiesCount = 0,
+}
+
+fightObserver.EntitiesContext = {
+    FightEntities = fightObserver.FightEntitiesList,
+    AllyFightEntities = fightObserver.AllyFightEntitiesList,
+    EnemyFightEntities = fightObserver.EnemyFightEntitiesList,
+}
+
+fightObserver.FightContext = {
+    GenericContext = fightObserver.GenericContext,
+    EntitiesContext = fightObserver.EntitiesContext
+}
+
+fightObserver.contextUpdatedAt = 0
+fightObserver.fightBeganAt = 0
+
+function fightObserver:isTimeToUpdate(timeDelay)
+    local timeDelta = os.clock() - self.contextUpdatedAt
+
+    if timeDelta > timeDelay then
+        global:printMessage(string.format("Elapsed time: %.2f\n", timeDelta))
+        self:UpdateContext()
+    end
+end
+
+function fightObserver:UpdateContext()
+    self.contextUpdatedAt = os.clock()
+    self.FightContext = {
+        GenericContext = self:LoadGenericContext(),
+        EntitiesContext = self:LoadEntitiesContext(),
+    }
+end
 
 function fightObserver:LoadFightContext()
-    self:LoadEntitiesContext()
-    self:LoadGenericContext()
-
-    self.FightContext = {
-        self.GenericContext,
-        self.EntitiesContext,
-    }
+    self.fightBeganAt = os.clock()
+    self:UpdateContext()
 end
 
 function fightObserver:LoadEntitiesContext()

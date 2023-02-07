@@ -1,13 +1,15 @@
 local characterClass = require("Modules.CharacterClass")
 local fightEngine = require("Modules.FightEngine")
-local fightObserver = require("Modules.fightObserver")
+local fightObserver = require("Modules.FightObserver")
+
+local updateDelay = 300000;
 
 function move()
     if fightEngine.IsFightStart() then
-        fightObserver.LoadFightContext()
+        fightObserver:LoadFightContext()
 
-        local attackersCells = fightObserver.GetAttackersCells()
-        local defendersCells = fightObserver.GetDefendersCells()
+        local attackersCells = fightObserver:GetAttackersCells()
+        local defendersCells = fightObserver:GetDefendersCells()
 
         prefightManagement(attackersCells, defendersCells)
         fightManagement()
@@ -47,12 +49,14 @@ function prefightManagement(attackersCells, defendersCells)
     local chosenCellId = fightEngine.ChoseStrartingCell(occupiedAttackerCells)
 
     fightAction:chooseCell(chosenCellId)
+    fightObserver:isTimeToUpdate(updateDelay)
 end
 
 -- Main function managing the AI of character wich executes the script
 function fightManagement()
     -- Check if i am at turn so logic runs only for my char
     if fightCharacter:isItMyTurn() then
+        fightObserver:isTimeToUpdate(updateDelay)
         --------------------------------------------
         -- Before doing actions check positioning --
         --------------------------------------------
@@ -82,5 +86,6 @@ function fightManagement()
 
         -- When all is done then end turn
         fightAction:passTurn()
+        fightObserver:isTimeToUpdate(updateDelay)
     end
 end

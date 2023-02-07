@@ -1,6 +1,7 @@
 local utils = require("Modules.Utils")
 local fightEngine = require("Modules.FightEngine")
 local spellCastResult = require("Enum.SpellCastResult")
+--local cooldownRequirement = require("Modules.Requirements.CooldownRequirement")
 
 local spell = {}
 
