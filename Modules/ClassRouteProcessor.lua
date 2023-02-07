@@ -141,7 +141,7 @@ function classRouteProcessor:SelectSuitableTraningNode(classRoute, currentCharLe
     elseif trainingNodeCount > 1 then
         for i = 1, trainingNodeCount, 1 do
             local currentTrainingNode = classRoute.TraningNode[i]
-            if not ValidaceTraningNodeRequirements(currentTrainingNode, currentCharLevel) then
+            if not ValidateTraningNode(currentTrainingNode, currentCharLevel) then
                 classRoute.remove(currentTrainingNode)
             end
         end
@@ -154,7 +154,7 @@ function classRouteProcessor:SelectSuitableTraningNode(classRoute, currentCharLe
     self.CurrentTraningNode = classRoute.TraningNode
 end
 
-function ValidaceTraningNodeRequirements(currentTrainingNode, currentCharLevel)
+function ValidateTraningNode(currentTrainingNode, currentCharLevel)
     local routeGeneralInfo = currentTrainingNode.GeneralInfo
 
     -- level range validation

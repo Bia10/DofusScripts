@@ -25,6 +25,14 @@ characterClass.Data = {
     { Id = 20, NameFr = "Forgelance", NameEn = "Forgelance" }
 }
 
+function characterClass.IsSupportClass(classId)
+    local supportClassIds = { 1, 2, 6, 7 }
+
+    for i = 1, #supportClassIds, 1 do
+        return supportClassIds == classId
+    end
+end
+
 function characterClass.SelectAndExecuteFightStrategy(selectByMainElement)
     local characterClassId = character:breed()
     local mainStat = characterStats.GetHighestStat()

@@ -83,18 +83,30 @@ function spell:HasApToCast(spellId, numberOfTimes)
     end
 end
 
--- TODO: rename ro IsTargetCellWithinRangeInterval
--- TODO: use spell DefaultRangeMin, DefaultRangeMax
-function spell:IsTargetCellInRange(spellId, myCellId, targetCellId)
-    local spellDefaultRange = self:GetSpellParam(spellId, "DefaultRange")
+function spell:IsTargetCellWithinRange(spellId, myCellId, targetCellId)
+    -- TODO: spell range depends on spell level
+    local spellDefaultMaxRange = self:GetSpellParam(spellId, "DefaultMaxRange")
+    local spellDefaultMinRange = self:GetSpellParam(spellId, "DefaultMinRange")
     local characterRangeBonus = fightCharacter:getRange()
+    local distanceToTargetCell = fightAction:getDistance(myCellId, targetCellId)
+    -- TODO: is spell range modyfiable?
+    local spellMaxModifiedRange = spellDefaultMaxRange + characterRangeBonus
+    local spellMinModifiedRange = spellDefaultMinRange + characterRangeBonus
+    local isWithinMaxRange = false
+    local isWithinMinRange = false
 
-    -- TODO: we assume that spell range is modyfiable, we asume reuirement for line of sight
-    -- TODO: we assume a level 1 spell range as its actually progressive
-    -- TODO: we assume spell is not required to be cast in geometric shape (only in line, only in circle etc...)
-    if fightAction:getDistance(myCellId, targetCellId) < (spellDefaultRange + characterRangeBonus) then
-        return true
+    -- TODO: we asume reuirement for line of sight
+    -- TODO: distance depends on choice of metric space, we assume euclidian metric space
+
+    if distanceToTargetCell <= spellMaxModifiedRange then
+        isWithinMaxRange = true
     end
+
+    if distanceToTargetCell >= spellMinModifiedRange then
+        isWithinMinRange = true
+    end
+
+    return isWithinMaxRange and isWithinMinRange;
 end
 
 function spell:IsTargetCellInLineOfSight(myCellId, targetCellId)
@@ -132,7 +144,7 @@ function spell:IsCastableAtTargetCell(spellId, numberOfTimes, spellLaunchCellId,
 
     if not self:IsCastable(spellId, numberOfTimes) then
         return false
-    elseif not self:IsTargetCellInRange(spellId, spellLaunchCellId, targetCellId) then
+    elseif not self:IsTargetCellWithinRange(spellId, spellLaunchCellId, targetCellId) then
         return false
     elseif not self:ValidateAgainstRequirements(spellId, spellLaunchCellId, targetCellId) then
         return false

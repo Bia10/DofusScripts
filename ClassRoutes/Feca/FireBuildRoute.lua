@@ -33,25 +33,30 @@ fireBuildRoute.TraningNodeLevel_0_10.LocationInfo = {
 }
 
 fireBuildRoute.TraningNodeLevel_0_10.CharacterInfo = {
-    CombatRole = "Damage", AutoTrainStats = true, AutoEquipItems = true,
-    LevelUpNodes = {
-        { CharacterLevel = 1, StatType = "Inteligence", PointsToUse = -1 },
-        { CharacterLevel = 2, StatType = "Inteligence", PointsToUse = -1 },
-        { CharacterLevel = 3, StatType = "Inteligence", PointsToUse = -1 },
-        { CharacterLevel = 4, StatType = "Inteligence", PointsToUse = -1 },
-        { CharacterLevel = 5, StatType = "Inteligence", PointsToUse = -1 },
-        { CharacterLevel = 6, StatType = "Inteligence", PointsToUse = -1 },
-        { CharacterLevel = 7, StatType = "Inteligence", PointsToUse = -1 },
-        { CharacterLevel = 8, StatType = "Inteligence", PointsToUse = -1 },
-        { CharacterLevel = 9, StatType = "Inteligence", PointsToUse = -1 },
-        { CharacterLevel = 10, StatType = "Inteligence", PointsToUse = -1 },
-    },
+    MainStat = "Inteligence", CombatRole = "Damage", AutoTrainStats = true, AutoEquipItems = true,
+    LevelUpConfig = { AutoGenerateLevelUpNodes = true, LevelStepSize = 1, LevelOnlyMainStatType = true,
+        UseAllAvailiblePoints = true },
+    LevelUpNodes = {},
+    GearUpConfig = { AutoGenerateGearUpNodes = false, BuyGearIfNotFound = false },
     GearUpNodes = {
         { CharacterLevel = 7, ItemIdsToEquip = { 8237 } },
+        { CharacterLevel = 8, ItemIdsToEquip = { 8231 } },
+        { CharacterLevel = 9, ItemIdsToEquip = { 8225 } },
+        { CharacterLevel = 10, ItemIdsToEquip = { 8219 } },
+        { CharacterLevel = 12, ItemIdsToEquip = { 8243 } },
     }
 }
 
--- TODO: professionInfo -- CraftNode
+fireBuildRoute.TraningNodeLevel_0_10.ProfessionInfo = {
+    BlockMoveToNextRouteNodeIfLevelNotReached = true,
+    CraftAfterGatheing = false,
+    LevelUpRequirements = {
+        { ProffesionId = 34, LevelToReach = 42 }
+    },
+    CraftNodes = {
+        { ItemIdToCraft = 4546, NumberOfTimes = 200, }
+    }
+}
 
 function fireBuildRoute.takeRandomBreak()
     local miliseconds = math.random(20000, 120000)

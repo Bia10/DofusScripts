@@ -1,10 +1,13 @@
+local characterClass = require("Modules.CharacterClass")
+
 local fightEngine = {}
 
 function fightEngine.ChoseStrartingCell(occupiedAttackerCells)
     -- free cell nearby ally cell occupied by class feca/eniprisa/ecaflip
     for key, _ in pairs(occupiedAttackerCells) do
-        local figtherClass = fightAction:getFighter(occupiedAttackerCells[key].CellId)
-        if figtherClass == 1 or figtherClass == 2 then
+        local figtherClassAtCell = fightAction:getFighter(occupiedAttackerCells[key].CellId)
+
+        if characterClass.IsSupportClass(figtherClassAtCell) then
             local adjacentCellsIds = fightAction:getAdjacentCells(occupiedAttackerCells[key].CellId)
 
             for cellKey, _ in pairs(adjacentCellsIds) do
