@@ -5,12 +5,9 @@ local spellCastResult = require("Enum.SpellCastResult")
 local spell = {}
 
 spell.Data = {
-    { Id = 0, NameFr = "Coup de poing", NameEn = "Punch", ApCost = 3, DefaultRange = 1, LosRequired = false,
-        TargetRequired = false, RecastTime = 1 },
-    { Id = 7533, NameFr = "Lancer de Pièces", NameEn = "Coin Throwing", ApCost = 2, DefaultRange = 8, LosRequired = true,
-        TargetRequired = true, RecastTime = 1, CastsPerTurnPerTarget = 3 },
-    { Id = 7535, NameFr = "Sac Animé", NameEn = "Living Bag", ApCost = 2, DefaultRange = 1, LosRequired = false,
-        TargetRequired = false, EmptyCellRequired = true, RecastTime = 4 },
+    { Id = 0,    NameFr = "Coup de poing",    NameEn = "Punch",         ApCost = 3, DefaultRange = 1, LosRequired = false, TargetRequired = false, EmptyCellRequired = false, RecastTime = 1, CastsPerTurnPerTarget = 3 },
+    { Id = 7533, NameFr = "Lancer de Pièces", NameEn = "Coin Throwing", ApCost = 2, DefaultRange = 8, LosRequired = true,  TargetRequired = true,  EmptyCellRequired = false, RecastTime = 1, CastsPerTurnPerTarget = 3 },
+    { Id = 7535, NameFr = "Sac Animé",        NameEn = "Living Bag",    ApCost = 2, DefaultRange = 1, LosRequired = false, TargetRequired = false, EmptyCellRequired = true,  RecastTime = 4, CastsPerTurnPerTarget = 0 },
 }
 
 function spell:GetIdByName(spellName, localization)
@@ -99,7 +96,6 @@ function spell:IsTargetCellOccupied(targetCellId)
 end
 
 function spell:IsCastable(spellId, numberOfTimes)
-
     return self:HasApToCast(spellId, numberOfTimes) and self:CanCastThisTurn(spellId)
 end
 
@@ -169,14 +165,14 @@ function spell:TryMoveIntoCastRange(spellId, targetCellId, onFailMoveTowardsTarg
     for _, reachableCellsId in pairs(reachableCellsIds) do
         if self:IsCastableAtTargetCell(spellId, maxCastsPerTurnPerTarget, reachableCellsId, targetCellId) then
             global:printMessage("[SPELL] found rechable cell: " ..
-                reachableCellsId .. " where target cell: " .. targetCellId .. " can be attacked moving towards it.")
+            reachableCellsId .. " where target cell: " .. targetCellId .. " can be attacked moving towards it.")
             fightAction:moveToWardCell(reachableCellsId)
             return
         end
     end
 
     global:printMessage("[SPELL] failed to find a rechable cell where target cell: " ..
-        targetCellId .. " can be attacked.")
+    targetCellId .. " can be attacked.")
     if onFailMoveTowardsTarget then
         fightAction:moveToWardCell(targetCellId)
     end
@@ -191,7 +187,7 @@ function spell:TryCastingAtTargetCell(spellId, myCellId, targetCellId)
     -- Its not possble to cast given spellId at given cellId for a reason
     if spellCastOnCellState ~= spellCastResult.CASTING_POSSIBLE then
         global:printError("Its not possible to cast spellId: " ..
-            spellId .. " on cellId: " .. targetCellId .. " reason: " .. spellCastOnCellStateStr)
+        spellId .. " on cellId: " .. targetCellId .. " reason: " .. spellCastOnCellStateStr)
         ---------------------------------------------
         -- Spell cast on cellId failure processing --
         ---------------------------------------------

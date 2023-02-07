@@ -30,7 +30,7 @@ function classRoute.GenerateLevelUpNodes(generalInfo, characterInfo)
     end
 
     if characterInfo.levelUpConfig.UseAllAvailiblePoints then
-        currentLevelUpNode.PointsToUse.insert(-1)
+        currentLevelUpNode.PointsToUse.insert( -1)
     end
 
     return currentLevelUpNode

@@ -47,9 +47,9 @@ FORBIDDEN_MONSTERS = { 2316, 1756 }
 function move()
     return {
         -- map defined by mapX, mapY pos, path to change to next map by top edge of map box
-        { map = "4,-19", path = "top" },
+        { map = "4,-19",   path = "top" },
         -- map defined by mapX, mapY pos, path to change map specifies map box edge and also concrete cellId to use
-        { map = "0,0", path = "left(364)" },
+        { map = "0,0",     path = "left(364)" },
         -- map defined by mapId, path defined by combination of possible paths results in a randomized selection of one result
         { map = "9856523", path = "top|left|right" },
     }
@@ -59,7 +59,7 @@ end
 function bank()
     return {
         -- normal move
-        { map = "5,-16", path = "left" },
+        { map = "5,-16",   path = "left" },
         -- map defined by mapId, interact with banker and deposit all, exit bank via cellId
         { map = "9856523", npcBank = true, path = "406" },
     }
@@ -70,7 +70,7 @@ function phenix()
     return {
         { map = "-3,-12", path = "right" },
         -- map defines by by X, Y pos, door action demands interaction with object of objId
-        { map = "4,-20", door = "254" },
+        { map = "4,-20",  door = "254" },
     }
 end
 

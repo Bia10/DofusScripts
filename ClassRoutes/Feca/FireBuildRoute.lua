@@ -15,15 +15,20 @@ fireBuildRoute.TraningNodeLevel_0_10 = {
 }
 
 fireBuildRoute.TraningNodeLevel_0_10.GeneralInfo = {
-    MinimumLevel = 0, MaximumLevel = 10,
-    MinimumGroupSize = 0, MaximumGroupSize = 0,
-    MinimumGroupTotalLevel = 0, MaximumGroupTotalLevel = 0,
+    MinimumLevel = 0,
+    MaximumLevel = 10,
+    MinimumGroupSize = 0,
+    MaximumGroupSize = 0,
+    MinimumGroupTotalLevel = 0,
+    MaximumGroupTotalLevel = 0,
     CanTrainSolo = true
 }
 
 fireBuildRoute.TraningNodeLevel_0_10.LocationInfo = {
-    Area = "Incarnam", SubArea = "Incarnam",
-    TraversalMode = "Random", SyncGroupTraversal = false,
+    Area = "Incarnam",
+    SubArea = "Incarnam",
+    TraversalMode = "Random",
+    SyncGroupTraversal = false,
     MapNodes = {
         { MapIdNode = 99999, FightNode = true, MoveNode = "top", },
         { MapIdNode = 99999, FightNode = true, MoveNode = "top" },
@@ -33,15 +38,17 @@ fireBuildRoute.TraningNodeLevel_0_10.LocationInfo = {
 }
 
 fireBuildRoute.TraningNodeLevel_0_10.CharacterInfo = {
-    MainStat = "Inteligence", CombatRole = "Damage", AutoTrainStats = true, AutoEquipItems = true,
-    LevelUpConfig = { AutoGenerateLevelUpNodes = true, LevelStepSize = 1, LevelOnlyMainStatType = true,
-        UseAllAvailiblePoints = true },
+    MainStat = "Inteligence",
+    CombatRole = "Damage",
+    AutoTrainStats = true,
+    AutoEquipItems = true,
+    LevelUpConfig = { AutoGenerateLevelUpNodes = true, LevelStepSize = 1, LevelOnlyMainStatType = true, UseAllAvailiblePoints = true },
     LevelUpNodes = {},
     GearUpConfig = { AutoGenerateGearUpNodes = false, BuyGearIfNotFound = false },
     GearUpNodes = {
-        { CharacterLevel = 7, ItemIdsToEquip = { 8237 } },
-        { CharacterLevel = 8, ItemIdsToEquip = { 8231 } },
-        { CharacterLevel = 9, ItemIdsToEquip = { 8225 } },
+        { CharacterLevel = 7,  ItemIdsToEquip = { 8237 } },
+        { CharacterLevel = 8,  ItemIdsToEquip = { 8231 } },
+        { CharacterLevel = 9,  ItemIdsToEquip = { 8225 } },
         { CharacterLevel = 10, ItemIdsToEquip = { 8219 } },
         { CharacterLevel = 12, ItemIdsToEquip = { 8243 } },
     }

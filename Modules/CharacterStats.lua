@@ -2,12 +2,12 @@ local characterStats = {}
 
 function characterStats.GetHighestStat()
     local statsTable = {
-        { Points = character:getAgilityBase(), Type = "Agility" },
-        { Points = character:getChanceBase(), Type = "Chance" },
+        { Points = character:getAgilityBase(),      Type = "Agility" },
+        { Points = character:getChanceBase(),       Type = "Chance" },
         { Points = character:getIntelligenceBase(), Type = "Inteligence" },
-        { Points = character:getStrenghtBase(), Type = "Strenght" },
-        { Points = character:getVitalityBase(), Type = "Vitality" },
-        { Points = character:getWisdomBase(), Type = "Wisdom" },
+        { Points = character:getStrenghtBase(),     Type = "Strenght" },
+        { Points = character:getVitalityBase(),     Type = "Vitality" },
+        { Points = character:getWisdomBase(),       Type = "Wisdom" },
     }
 
     -- sort table in ascending order, therefore last is highest value
@@ -22,30 +22,18 @@ function characterStats.CanUpgrade(statType, pointsToInvest)
         return false
     end
 
-    if statType == "Inteligence" then
-        if character:getCostIntelligence() > pointsToInvest then
-            return false
-        end
-    elseif statType == "Strength" then
-        if character:getCostStrenght() > pointsToInvest then
-            return false
-        end
-    elseif statType == "Agility" then
-        if character:getCostAgility() > pointsToInvest then
-            return false
-        end
-    elseif statType == "Chance" then
-        if character:getCostChance() > pointsToInvest then
-            return false
-        end
-    elseif statType == "Vitality" then
-        if character:getCostVitality() > pointsToInvest then
-            return false
-        end
-    elseif statType == "Wisdom" then
-        if character:getCostWisdom() > pointsToInvest then
-            return false
-        end
+    if statType == "Inteligence" and character:getCostIntelligence() > pointsToInvest then
+        return false
+    elseif statType == "Strength" and character:getCostStrenght() > pointsToInvest then
+        return false
+    elseif statType == "Agility" and character:getCostAgility() > pointsToInvest then
+        return false
+    elseif statType == "Chance" and character:getCostChance() > pointsToInvest then
+        return false
+    elseif statType == "Vitality" and character:getCostVitality() > pointsToInvest then
+        return false
+    elseif statType == "Wisdom" and character:getCostWisdom() > pointsToInvest then
+        return false
     end
 
     return true

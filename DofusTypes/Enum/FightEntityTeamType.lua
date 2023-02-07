@@ -1,6 +1,4 @@
-local fightEntityTeamType = {}
-
-fightEntityTeamType = {
+local fightEntityTeamType = {
     CHALLENGER = 0,
     DEFENDER = 1,
     SPECTATOR = 2

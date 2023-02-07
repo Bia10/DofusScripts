@@ -14,7 +14,7 @@ function worldMove.ToMap(mapId, mapX, mapY)
     if map:loadMove(mapX, mapY) ~= 0 then
         if map:moveNext() then
             global:printMessage("[WorldMove] found destination of mapX: " ..
-                mapX .. " mapY: " .. mapY .. " proceding to move!")
+            mapX .. " mapY: " .. mapY .. " proceding to move!")
         end
         global:printMessage("[WorldMove] failed to find destination of mapX: " .. mapX .. " mapY: " .. mapY .. ".")
     end

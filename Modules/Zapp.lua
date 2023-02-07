@@ -4,7 +4,7 @@ local zapp = {}
 
 zapp.Data = {
     { ZaapId = 0, MapId = 191105026, MapPos = "5, -18", LocationNameFr = "Cite d'Astrub", LocationNameEn = "Astrub City" },
-    { ZaapId = 0, MapId = 120062979, MapPos = "1, -32", LocationNameFr = "Tainela", LocationNameEn = "Tainela" },
+    { ZaapId = 0, MapId = 120062979, MapPos = "1, -32", LocationNameFr = "Tainela",       LocationNameEn = "Tainela" },
 }
 
 function zapp.TryMovingTo(mapId)

@@ -15,6 +15,7 @@ function IsValid(requiredHP, comparisonType, targetEntity)
         return targetEntityCurHP >= requiredHP
     end
 
+    global:printError("[Requirement-HP] Invalid comparison type: " ..comparisonType)
     return false;
 end
 

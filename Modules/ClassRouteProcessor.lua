@@ -28,7 +28,7 @@ function classRouteProcessor:ProcessLocationInfo(gatherOnMaps, fightOnMaps, trav
     -- Starting mapNode is nill or false we cannot continue
     if not currentMapNode then
         global.printMessage("[RouteProcessor] None mapNode found for mapPos: " ..
-            currentMapPos .. " (" .. currentMapId .. ").")
+        currentMapPos .. " (" .. currentMapId .. ").")
 
         return self.NoneMapNodeFound()
     end
@@ -99,8 +99,8 @@ function classRouteProcessor:ProcessLocationInfo(gatherOnMaps, fightOnMaps, trav
     reusltMoveData.path = currentMapNode.MoveNode
 
     global.printMessage("[RouteProcessor] Generating move() data," ..
-        " map: " .. reusltMoveData.map .. " path: " .. reusltMoveData.path ..
-        " gather: " .. reusltMoveData.gather .. "fight: " .. reusltMoveData.fight)
+    " map: " .. reusltMoveData.map .. " path: " .. reusltMoveData.path ..
+    " gather: " .. reusltMoveData.gather .. "fight: " .. reusltMoveData.fight)
 
     -- Now we done what we wanted time to return basic data back to move() function
     return reusltMoveData

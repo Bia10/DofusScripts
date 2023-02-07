@@ -1,16 +1,16 @@
 local characterEquipment = {}
 
 characterEquipment.Slots = {
-    { SlotIndex = 0, SlotNameEn = "Amulet" },
-    { SlotIndex = 1, SlotNameEn = "Weapon" },
-    { SlotIndex = 2, SlotNameEn = "Ring Left" },
-    { SlotIndex = 3, SlotNameEn = "Belt" },
-    { SlotIndex = 4, SlotNameEn = "Ring Right" },
-    { SlotIndex = 5, SlotNameEn = "Boots" },
-    { SlotIndex = 6, SlotNameEn = "Hat" },
-    { SlotIndex = 7, SlotNameEn = "Cape" },
-    { SlotIndex = 8, SlotNameEn = "Pet" },
-    { SlotIndex = 9, SlotNameEn = "First Dofus Slot" },
+    { SlotIndex = 0,  SlotNameEn = "Amulet" },
+    { SlotIndex = 1,  SlotNameEn = "Weapon" },
+    { SlotIndex = 2,  SlotNameEn = "Ring Left" },
+    { SlotIndex = 3,  SlotNameEn = "Belt" },
+    { SlotIndex = 4,  SlotNameEn = "Ring Right" },
+    { SlotIndex = 5,  SlotNameEn = "Boots" },
+    { SlotIndex = 6,  SlotNameEn = "Hat" },
+    { SlotIndex = 7,  SlotNameEn = "Cape" },
+    { SlotIndex = 8,  SlotNameEn = "Pet" },
+    { SlotIndex = 9,  SlotNameEn = "First Dofus Slot" },
     { SlotIndex = 10, SlotNameEn = "Second Dofus Slot" },
     { SlotIndex = 11, SlotNameEn = "Third Dofus Slot" },
     { SlotIndex = 12, SlotNameEn = "Fouth Dofus Slot" },
@@ -92,7 +92,7 @@ function characterEquipment:EquipIntoSlot(itemGid, equpmentSlotName)
     end
 
     global:printMessage("[CharacterEquipment] failed to equip item: " ..
-        itemGid .. " into slot: " .. equpmentSlotName)
+    itemGid .. " into slot: " .. equpmentSlotName)
 end
 
 function characterEquipment:EquipMultipleItems(listOfitemsGid)
