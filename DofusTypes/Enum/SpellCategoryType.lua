@@ -1,12 +1,12 @@
 local spellCategoryType = {
-    None = 0,
-    Agressive = 1,
-    Healing = 2,
-    Teleport = 4,
-    Buff = 8,
-    Summon = 16,
-    Mark = 32,
-    Debuff = 64,
+    NONE = 0,
+    AGRESSIVE = 1,
+    HEALING = 2,
+    TELEPORT = 4,
+    BUFF = 8,
+    SUMMON = 16,
+    MARK = 32,
+    DEBUFF = 64,
 }
 
 return spellCategoryType
