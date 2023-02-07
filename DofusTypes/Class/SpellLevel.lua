@@ -33,7 +33,7 @@ SpellLevel = {
     StatesCriterion = "",
     Effects = {},
     CriticalEffects = {},
-    PreviewZones = {}
+    PreviewZones = EffectZone:new()
 }
 
 ----------
