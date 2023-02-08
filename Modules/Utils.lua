@@ -1,4 +1,16 @@
+local json = require("Libs.json")
+
 local utils = {}
+
+
+-- TODO: decode/encode data
+function utils.encodeToClass(data, classType)
+    json.encode()
+end
+
+function utils.decodeToClass(data, classType)
+    json.decode()
+end
 
 function utils.GetArgs(func)
     local args = {}

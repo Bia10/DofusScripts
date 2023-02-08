@@ -1,14 +1,13 @@
 local utils = require("Modules.Utils")
 local fightEngine = require("Modules.FightEngine")
 local spellCastResult = require("Enum.SpellCastResult")
---local cooldownRequirement = require("Modules.Requirements.CooldownRequirement")
 
 local spell = {}
 
 spell.Data = {
     { Id = 0,    NameFr = "Coup de poing",     NameEn = "Punch",         ApCost = 3, DefaultRange = 1, LosRequired = false, TargetRequired = false, EmptyCellRequired = false, RecastTime = 1, CastsPerTurnPerTarget = 3 },
     { Id = 7533, NameFr = "Lancer de Pièces", NameEn = "Coin Throwing", ApCost = 2, DefaultRange = 8, LosRequired = true,  TargetRequired = true,  EmptyCellRequired = false, RecastTime = 1, CastsPerTurnPerTarget = 3 },
-    { Id = 7535, NameFr = "Sac Animé",        NameEn = "Living Bag",    ApCost = 2, DefaultRange = 1, LosRequired = false, TargetRequired = false, EmptyCellRequired = true,  RecastTime = 4, CastsPerTurnPerTarget = 0 },
+    { Id = 13328, NameFr = "Sac Animé",        NameEn = "Living Bag",    ApCost = 2, DefaultRange = 1, LosRequired = false, TargetRequired = false, EmptyCellRequired = true,  RecastTime = 4, CastsPerTurnPerTarget = 0 },
 }
 
 function spell:GetIdByName(spellName, localization)
