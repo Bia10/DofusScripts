@@ -6,22 +6,25 @@ local targetTypeRequired = require("Modules.Requirements.TargetTypeRequirement")
 
 local actionRequirementsProcessor = {}
 
-function actionRequirementsProcessor.Validate(spellId, numberOfCasts, sourceCellId, targetCellId, requiredType, targetType)
-    -- TODO: load requirements from spellLevel
-    local isLineOfSightRequired = self:GetSpellParam(spellId, "LosRequired")
-    local isTargetRequired = self:GetSpellParam(spellId, "TargetRequired")
-    local isEmptyCellRequired = self:GetSpellParam(spellId, "EmptyCellRequired")
-
+function actionRequirementsProcessor.Validate(spellLevel, spellId, numberOfCasts, sourceCellId, targetCellId,
+                                              requiredType, targetType)
     cooldownRequirement.IsValid(spellId)
     actionPointsRequirement.IsValid(spellId, numberOfCasts)
 
-    if isLineOfSightRequired then
+    if spellLevel.CastTestLos then
         lineOfSightRequirement.IsValid(sourceCellId, targetCellId)
-    elseif isEmptyCellRequired then
+    elseif spellLevel.NeedFreeCell then
         emptyCellRequirement.IsValid(targetCellId)
-    elseif isTargetRequired then
-        targetTypeRequired.IsValid(requiredType, targetType)
+    elseif spellLevel.NeedTakenCell then
+        --occupiedCellRequirement.IsValid(targetCellId)
+    elseif spellLevel.NeedVisibleEntity then
+    elseif spellLevel.NeedFreeTrapCell then
+    elseif spellLevel.NeedCellWithoutPortal then
+    elseif spellLevel.CastInLine then
+    elseif spellLevel.CastInDiagonal then
     end
+
+    --targetTypeRequired.IsValid(requiredType, targetType)
 end
 
 return actionRequirementsProcessor

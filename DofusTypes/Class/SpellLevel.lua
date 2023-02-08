@@ -1,7 +1,7 @@
 ----------------------------------
 -- Spell level class definition --
 ----------------------------------
-SpellLevel = {
+local SpellLevel = {
     Id = 0,
     SpellId = 0,
     Grade = 0,
@@ -33,7 +33,7 @@ SpellLevel = {
     StatesCriterion = "",
     Effects = {},
     CriticalEffects = {},
-    PreviewZones = EffectZone:new()
+    PreviewZones = {}
 }
 
 ----------
@@ -85,3 +85,5 @@ function SpellLevel:new(thisObj, id, spellId, grade, spellBreed, apCost, minRang
 
     return thisObj
 end
+
+return SpellLevel
