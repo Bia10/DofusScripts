@@ -1,12 +1,23 @@
 local utils = require("Modules.Utils")
+local genericDeque = require("Modules.GenericDeque")
+local NodeProcessor= require("Modules.NodeProcessor")
 
 local classRoute = {}
+local mapNodesDeque = {}
 
-function classRoute.Initialize(currentRoute)
-    for key, _ in pairs(currentRoute) do
-        local trainingNode = currentRoute[key].TraningNode
-        classRoute.ProcessTraningRoute(trainingNode)
+function classRoute.Initialize(currentRouteNodes)
+    local mapNodes = currentRouteNodes.LocationInfo.MapNodes
+
+    local nodeProcessor = NodeProcessor:new(mapNodes)
+
+    for nodeIndex, nodeData in pairs(mapNodes) do
+        mapNodesDeque:pushRight(nodeData)
     end
+end
+
+function classRoute.PrintContent()
+    local mapNodes = mapNodesDeque:contents()
+    utils.tablePrint(mapNodes)
 end
 
 function classRoute.ProcessTraningRoute(trainingNode)

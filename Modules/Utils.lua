@@ -29,6 +29,8 @@ function utils.tablePrint(table, indent)
             utils.tablePrint(value, indent + 1)
         elseif type(value) == 'boolean' then
             print(formatting .. tostring(value))
+        elseif type(value) == "function" then
+            print(formatting .. tostring(value))
         else
             print(formatting .. value)
         end

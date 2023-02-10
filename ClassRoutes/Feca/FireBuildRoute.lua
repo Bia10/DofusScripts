@@ -1,20 +1,15 @@
 local fireBuildRoute = {}
 
-fireBuildRoute.RouteNodes = {
-    { TraningNode = fireBuildRoute.TraningNodeLevel_0_10 },
-    { TraningNode = fireBuildRoute.TraningNodeLevel_10_20, }
-}
-
 ---------------------------
 -- TraningNodeLevel_0_10 --
 ---------------------------
-fireBuildRoute.TraningNodeLevel_0_10 = {
-    GeneralInfo = fireBuildRoute.TraningNodeLevel_0_10.GeneralInfo,
-    LocationInfo = fireBuildRoute.TraningNodeLevel_0_10.LocationInfo,
-    CharacterInfo = fireBuildRoute.TraningNodeLevel_0_10.CharacterInfo
-}
+local function takeRandomBreak()
+    local miliseconds = math.random(20000, 120000)
+    global.printMessage("Breaking for " .. miliseconds .. " ms.")
+    global:delay(miliseconds)
+end
 
-fireBuildRoute.TraningNodeLevel_0_10.GeneralInfo = {
+fireBuildRoute.GeneralInfo = {
     MinimumLevel = 0,
     MaximumLevel = 10,
     MinimumGroupSize = 0,
@@ -24,7 +19,7 @@ fireBuildRoute.TraningNodeLevel_0_10.GeneralInfo = {
     CanTrainSolo = true
 }
 
-fireBuildRoute.TraningNodeLevel_0_10.LocationInfo = {
+fireBuildRoute.LocationInfo = {
     Area = "Incarnam",
     SubArea = "Incarnam",
     TraversalMode = "Random",
@@ -33,11 +28,11 @@ fireBuildRoute.TraningNodeLevel_0_10.LocationInfo = {
         { MapIdNode = 99999, FightNode = true, MoveNode = "top", },
         { MapIdNode = 99999, FightNode = true, MoveNode = "top" },
         { MapIdNode = 99999, FightNode = true, MoveNode = "top" },
-        { MapIdNode = 99999, FightNode = true, CustomFunctionNode = fireBuildRoute.takeRandomBreak() },
-    },
+        { MapIdNode = 99999, FightNode = true, CustomFunctionNode = takeRandomBreak }
+    }
 }
 
-fireBuildRoute.TraningNodeLevel_0_10.CharacterInfo = {
+fireBuildRoute.CharacterInfo = {
     MainStat = "Inteligence",
     CombatRole = "Damage",
     AutoTrainStats = true,
@@ -50,11 +45,11 @@ fireBuildRoute.TraningNodeLevel_0_10.CharacterInfo = {
         { CharacterLevel = 8,  ItemIdsToEquip = { 8231 } },
         { CharacterLevel = 9,  ItemIdsToEquip = { 8225 } },
         { CharacterLevel = 10, ItemIdsToEquip = { 8219 } },
-        { CharacterLevel = 12, ItemIdsToEquip = { 8243 } },
+        { CharacterLevel = 12, ItemIdsToEquip = { 8243 } }
     }
 }
 
-fireBuildRoute.TraningNodeLevel_0_10.ProfessionInfo = {
+fireBuildRoute.ProfessionInfo = {
     BlockMoveToNextRouteNodeIfLevelNotReached = true,
     CraftAfterGatheing = false,
     LevelUpRequirements = {
@@ -65,13 +60,8 @@ fireBuildRoute.TraningNodeLevel_0_10.ProfessionInfo = {
     }
 }
 
-function fireBuildRoute.takeRandomBreak()
-    local miliseconds = math.random(20000, 120000)
-    global.printMessage("Breaking for " .. miliseconds .. " ms.")
-    global:delay(miliseconds)
-end
-
 ---------------------------
 -- TraningNodeLevel_10_20 --
 ---------------------------
+
 return fireBuildRoute
