@@ -21,7 +21,7 @@ Main = {}
 --         nil
 --     )
 
-classRoute.Initialize(fireBuildRoute)
-classRoute.PrintContent()
+classRoute.initialize(fireBuildRoute)
+classRoute.printContent()
 
 return Main

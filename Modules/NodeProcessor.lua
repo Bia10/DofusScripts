@@ -2,36 +2,52 @@ local genericDeque = require("Modules.GenericDeque")
 
 local nodeProcessor = {}
 
-local traningNodeDeque
 local mapNodesDeque
 local characterNodesDeque
-local professionNodesDeque
+--local professionNodesDeque
 
-function nodeProcessor:new(mapNodes)
-    nodeProcessor = {}
-    setmetatable(nodeProcessor, { __index = self })
+function nodeProcessor:new(thisObj, mapNodes, characterInfo)
+    thisObj = thisObj or {}
+    setmetatable(thisObj, { __index = self })
 
-    self.mapNodesDeque = genericDeque:new()
-    self.mapNodesDeque = self.addNodesToDeque(mapNodes, true)
+    mapNodesDeque = genericDeque:new()
+    -- add map nodes to right
+    self:addNodesToDeque(mapNodesDeque, mapNodes, true)
+
+    characterNodesDeque = genericDeque:new()
+    -- add levelUp nodes to right
+    self:addNodesToDeque(characterNodesDeque, characterInfo.LevelUpNodes, true)
+    -- add gearUp nodes to left
+    self:addNodesToDeque(characterNodesDeque, characterInfo.GearUpNodes, false)
 
     return nodeProcessor
 end
 
-function nodeProcessor:addNodesToDeque(nodePath, toRight)
+function nodeProcessor:addNodesToDeque(nodesDeque, mapNodes, toRight)
     if toRight then
-        for _, mapNodeValue in pairs(nodePath) do
-            self.mapNodesDeque.pushRight(mapNodeValue)
+        for _, mapNodeValue in pairs(mapNodes) do
+            nodesDeque:pushRight(mapNodeValue)
         end
     elseif not toRight then
-        for _, mapNodeValue in pairs(nodePath) do
-            self.mapNodesDeque.pushLeft(mapNodeValue)
+        for _, mapNodeValue in pairs(mapNodes) do
+            nodesDeque:pushLeft(mapNodeValue)
         end
     end
 end
 
+function nodeProcessor:getContents()
+    local mapNodes = mapNodesDeque:contents()
+    local characterNodes = characterNodesDeque:contents()
+    --local professionNodes = professionNodesDeque:contents()
+
+    local allNodes = { mapNodes, characterNodes } --professionNodes
+
+    return allNodes
+end
+
 function nodeProcessor:processNodes()
-    for i = 1, self.mapNodesDeque.length(), 1 do
-        self.processNode(self.mapNodesDeque[i])
+    for i = 1, mapNodesDeque.length(), 1 do
+        self:processNode(mapNodesDeque[i])
     end
 end
 

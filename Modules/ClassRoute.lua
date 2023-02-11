@@ -1,50 +1,65 @@
 local utils = require("Modules.Utils")
-local genericDeque = require("Modules.GenericDeque")
-local NodeProcessor= require("Modules.NodeProcessor")
+local nodeProcessor = require("Modules.NodeProcessor")
 
 local classRoute = {}
-local mapNodesDeque = {}
 
-function classRoute.Initialize(currentRouteNodes)
-    local mapNodes = currentRouteNodes.LocationInfo.MapNodes
+local currentnodeProcessor
+local currentRoute
 
-    local nodeProcessor = NodeProcessor:new(mapNodes)
+function classRoute.initialize(route)
+    currentRoute = route
 
-    for nodeIndex, nodeData in pairs(mapNodes) do
-        mapNodesDeque:pushRight(nodeData)
-    end
+    classRoute.processRoute(currentRoute)
+
+    local mapNodes = route.LocationInfo.MapNodes
+    local characterInfo = route.CharacterInfo
+
+    currentnodeProcessor = nodeProcessor:new(nil, mapNodes, characterInfo)
 end
 
-function classRoute.PrintContent()
-    local mapNodes = mapNodesDeque:contents()
-    utils.tablePrint(mapNodes)
+function classRoute.printContent()
+    local allNodes = nodeProcessor:getContents()
+
+    utils.tablePrint(allNodes)
 end
 
-function classRoute.ProcessTraningRoute(trainingNode)
-    local generalInfo = trainingNode.GeneralInfo
-    local characterInfo = trainingNode.CharacterInfo
+function classRoute.processRoute(route)
+    local generalInfo = route.GeneralInfo
+    local characterInfo = route.CharacterInfo
+    --local charLevel = character:level()
 
-    if characterInfo.LevelUpConfig.AutoGenerateLevelUpNodes and utils.IsTableEmpty(characterInfo.LevelUpNodesthen) then
-        characterInfo.LevelUpNodes = classRoute.generateLevelUpNodes(generalInfo, characterInfo)
+    -- if charLevel < generalInfo.MinimumLevel or charLevel > generalInfo.MaximumLevel then
+    --     global:printError("[ClassRoute] Outside level requirements for class route charLevel: " ..
+    --     charLevel .. " reqMinLvL: " .. generalInfo.MinimumLevel .. " reqMaxLvL: " .. generalInfo.MaximumLevel)
+    --     global:disconnect()
+    -- end
+
+    if characterInfo.LevelUpConfig.AutoGenerateLevelUpNodes then
+        classRoute.generateLevelUpNodes(generalInfo, characterInfo)
     end
+
+    -- isSolo? canTrainSolo check
+    -- isGroup? groupReqCheck
 end
 
-function classRoute.GenerateLevelUpNodes(generalInfo, characterInfo)
-    local currentLevelUpNode = { CharacterLevel = {}, StatType = {}, PointsToUse = {} }
+function classRoute.generateLevelUpNodes(generalInfo, characterInfo)
+    local currentLevelUpNode = { CharacterLevel = 0, StatType = "", PointsToUse = -1 }
 
-    for i = generalInfo.MinimumLevel, generalInfo.MaximumLevel, characterInfo.levelUpConfig.LevelStepSize do
-        currentLevelUpNode.CharacterLevel.insert(i)
+    for i = generalInfo.MinimumLevel, generalInfo.MaximumLevel, characterInfo.LevelUpConfig.LevelStepSize do
+        currentLevelUpNode.CharacterLevel = i
+
+        if characterInfo.LevelUpConfig.LevelOnlyMainStatType then
+            currentLevelUpNode.StatType = characterInfo.MainStat
+        end
+
+        if characterInfo.LevelUpConfig.UseAllAvailiblePoints then
+            currentLevelUpNode.PointsToUse = -1
+        end
+
+        table.insert(characterInfo.LevelUpNodes, currentLevelUpNode)
+    
+        currentLevelUpNode = { CharacterLevel = 0, StatType = "", PointsToUse = -1 }
     end
-
-    if characterInfo.levelUpConfig.LevelOnlyMainStatType then
-        currentLevelUpNode.StatType.insert(characterInfo.MainStat)
-    end
-
-    if characterInfo.levelUpConfig.UseAllAvailiblePoints then
-        currentLevelUpNode.PointsToUse.insert( -1)
-    end
-
-    return currentLevelUpNode
 end
 
 return classRoute
