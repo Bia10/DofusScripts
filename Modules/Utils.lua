@@ -1,15 +1,4 @@
-local json = require("Libs.json")
-
 local utils = {}
-
--- TODO: decode/encode data
-function utils.encodeToClass(data)
-    return json.encode(data)
-end
-
-function utils.decodeToClass(data)
-    return json.decode(data)
-end
 
 function utils.getValueFromKey(table, key)
     for _, value in ipairs(key) do
