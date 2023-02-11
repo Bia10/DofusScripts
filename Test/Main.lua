@@ -1,13 +1,19 @@
 local utils = require("Modules.Utils")
-local SpellClass = require("DofusTypes.Class.SpellLevel")
-local fireBuildRoute = require("ClassRoutes.Feca.FireBuildRoute")
-local classRoute = require("Modules.ClassRoute")
+--local SpellClass = require("DofusTypes.Class.SpellLevel")
+-- local fireBuildRoute = require("ClassRoutes.Feca.FireBuildRoute")
+-- local classRoute = require("Modules.ClassRoute")
+local jsonConverter = require("Modules.JsonConverter")
+local Bounds = require("DofusTypes.Class.Bounds")
 
 Main = {}
 
--- local jsontest = {}
+local jsontest =
+'{"id":0,"nameId":3011,"superAreaId":0,"containHouses":true,"containPaddocks":true,"bounds":{"x":-47,"y":-70,"width":65,"height":104},"worldmapId":0,"hasWorldMap":false,"hasSuggestion":true}'
+local areaResult = jsonConverter.ToType(jsontest)
 
--- local result = utils.decodeToClass(jsontest)
+if areaResult.ContainHouses then
+    print(areaResult:__tostring())
+end
 
 -- utils.tablePrint(result, 2)
 
@@ -21,7 +27,7 @@ Main = {}
 --         nil
 --     )
 
-classRoute.initialize(fireBuildRoute)
-classRoute.printContent()
+--classRoute.initialize(fireBuildRoute)
+--classRoute.printContent()
 
 return Main

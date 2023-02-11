@@ -1,7 +1,7 @@
 ----------------------
 -- Area class definition --
 ----------------------
-Area = {
+local Area = {
     Id = 0,
     NameId = 0,
     SuperAreaId = 0,
@@ -45,35 +45,8 @@ function Area:getSize()
     return self.Bounds:getArea()
 end
 
------------------------------
--- Bounds class definition --
------------------------------
-Bounds = {
-    PosX = 0,
-    PosY = 0,
-    Width = 0,
-    Height = 0,
-}
-
-----------
--- Ctor --
-----------
-function Bounds:new(thisObj, posX, posY, Width, height)
-    thisObj = thisObj or {}
-    setmetatable(thisObj, self)
-    self.__index = self
-
-    self.PosX = posX
-    self.PosY = posY
-    self.Width = Width
-    self.Height = height
-
-    return thisObj
+function Area:__tostring()
+    return "Area Id: " .. self.Id .. ""
 end
 
--------------
--- Methods --
--------------
-function Bounds:getArea()
-    return self.Height * self.Width
-end
+return Area
